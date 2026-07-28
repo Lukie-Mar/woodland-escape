@@ -8,9 +8,15 @@ export default function Hero() {
           Your peaceful resort destination surrounded by nature.
         </p>
 
-        <button className="hero-btn">
-          Reserve Your Stay
-        </button>
+        <div className="hero-buttons">
+    <button className="hero-btn">
+        Book Now
+    </button>
+
+    <button className="outline-btn">
+        Explore Rooms
+    </button>
+        </div>
       </div>
     </section>
   );

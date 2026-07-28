@@ -3,10 +3,10 @@ import { TreePalm } from "lucide-react";
 export default function Navbar() {
   return (
     <nav className="navbar">
-      <div className="logo">
+      <a href="#" className="logo">
         <TreePalm size={32} />
         <span>Woodland Escape</span>
-      </div>
+      </a>
 
       <ul>
         <li>Home</li>
