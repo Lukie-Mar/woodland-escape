@@ -5,7 +5,83 @@
 }
 
 body {
-  font-family: Arial, Helvetica sans-serif;
-  background-color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
   color: #333;
+}
+
+
+/* Navbar */
+
+.navbar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  background: white;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.navbar ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.navbar li {
+  cursor: pointer;
+}
+
+
+/* Hero */
+
+.hero {
+  height: calc(100vh - 80px);
+  background-image: url("/resort.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+.hero-content {
+  color: white;
+}
+
+
+.hero-content h1 {
+  font-size: 55px;
+  margin-bottom: 20px;
+}
+
+
+.hero-content p {
+  font-size: 22px;
+  margin-bottom: 30px;
+}
+
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+
+.book-btn,
+.hero-btn {
+  background: #2f6b3f;
+  color: white;
+  padding: 14px 30px;
+  border-radius: 30px;
+  font-size: 16px;
 }
