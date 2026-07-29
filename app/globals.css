@@ -1,5 +1,31 @@
 /* ==========================
-   Global Reset
+   CSS Variables
+========================== */
+
+:root {
+  --primary: #2f6b3f;
+  --primary-dark: #245733;
+
+  --background-light: #f8faf8;
+  --background-white: #ffffff;
+
+  --text-dark: #333333;
+  --text-muted: #666666;
+
+  --shadow-sm: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 50px;
+
+  --transition: all 0.3s ease;
+
+  --container-width: 1200px;
+}
+
+/* ==========================
+   Reset
 ========================== */
 
 * {
@@ -9,7 +35,7 @@
 }
 
 /* ==========================
-   Global Settings
+   Base Styles
 ========================== */
 
 html {
@@ -18,9 +44,10 @@ html {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  color: #333;
-  background-color: #fff;
+  background: var(--background-white);
+  color: var(--text-dark);
   overflow-x: hidden;
+  line-height: 1.6;
 }
 
 /* ==========================
@@ -33,9 +60,10 @@ a {
 }
 
 button {
+  font: inherit;
   border: none;
+  outline: none;
   cursor: pointer;
-  font-family: inherit;
 }
 
 img {
@@ -50,14 +78,36 @@ ol {
 }
 
 /* ==========================
-   Utility Classes
+   Reusable Utility Classes
 ========================== */
 
 .container {
-  width: min(1200px, 90%);
+  width: min(var(--container-width), 90%);
   margin: 0 auto;
 }
 
 .section {
   padding: 100px 0;
+}
+
+/* ==========================
+   Section Titles
+========================== */
+
+.section-subtitle {
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: 42px;
+  margin: 15px 0;
+  color: var(--text-dark);
+}
+
+.section-description {
+  color: var(--text-muted);
+  line-height: 1.8;
 }

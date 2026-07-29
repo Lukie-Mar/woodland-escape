@@ -1,0 +1,137 @@
+.rooms {
+  padding: 100px 0;
+  background: var(--background-light);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+  margin-bottom: 80px;
+}
+
+.card {
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.content {
+  padding: 24px;
+}
+
+.roomTitle {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: var(--text-dark);
+}
+
+.content p {
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+.button {
+  background: var(--primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+}
+
+.button:hover {
+  background: var(--primary-dark);
+}
+
+/* ==========================
+   Overnight Package
+========================== */
+
+.packageCard {
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-dark)
+  );
+
+  color: white;
+
+  border-radius: 24px;
+
+  padding: 60px;
+
+  text-align: center;
+}
+
+.packageLabel {
+  letter-spacing: 2px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.packageCard h2 {
+  font-size: 56px;
+  margin: 15px 0;
+}
+
+.packageCard p {
+  max-width: 650px;
+  margin: 0 auto 30px;
+  line-height: 1.8;
+}
+
+.packageCard ul {
+  display: inline-block;
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+.packageCard li {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.packageButton {
+  background: white;
+  color: var(--primary);
+
+  padding: 16px 38px;
+
+  border-radius: 999px;
+
+  font-weight: bold;
+
+  transition: var(--transition);
+}
+
+.packageButton:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .packageCard {
+    padding: 40px 25px;
+  }
+
+  .packageCard h2 {
+    font-size: 42px;
+  }
+}
