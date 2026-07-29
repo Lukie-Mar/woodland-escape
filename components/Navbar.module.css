@@ -1,0 +1,65 @@
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  height: 80px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 60px;
+
+  background: transparent;
+  color: white;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 22px;
+  font-weight: bold;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+.navList {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.navItem {
+  cursor: pointer;
+  transition: color .3s ease;
+}
+
+.navItem:hover {
+  color: #9FE870;
+}
+
+.bookBtn {
+  background: #2F6B3F;
+  color: white;
+
+  padding: 14px 30px;
+
+  border-radius: 30px;
+
+  border: none;
+
+  cursor: pointer;
+
+  transition: .3s;
+}
+
+.bookBtn:hover {
+  background: #245733;
+  transform: translateY(-2px);
+}

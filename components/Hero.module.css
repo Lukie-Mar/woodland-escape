@@ -1,0 +1,102 @@
+.hero {
+  position: relative;
+  height: 100vh;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0.55)
+    ),
+    url("/resort.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.heroContent {
+  color: white;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.heroContent h1 {
+  font-size: 72px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.heroContent p {
+  font-size: 22px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.heroButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.heroBtn,
+.outlineBtn {
+  padding: 15px 35px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.heroBtn {
+  background: #2f6b3f;
+  color: white;
+}
+
+.heroBtn:hover {
+  background: #245733;
+  transform: translateY(-3px);
+}
+
+.outlineBtn {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.outlineBtn:hover {
+  background: white;
+  color: #333;
+  transform: translateY(-3px);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .heroContent h1 {
+    font-size: 48px;
+  }
+
+  .heroContent p {
+    font-size: 18px;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .heroBtn,
+  .outlineBtn {
+    width: 220px;
+  }
+}
