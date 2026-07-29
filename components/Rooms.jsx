@@ -1,24 +1,24 @@
 import Image from "next/image";
 import styles from "./Rooms.module.css";
 
-const rooms = [
+const accommodations = [
   {
     title: "Deluxe Room",
     image: "/images/rooms/deluxe.jpg",
     description:
-      "A cozy and elegant room perfect for couples or small families.",
+      "A comfortable room perfect for couples or small groups.",
   },
   {
     title: "Family Room",
     image: "/images/rooms/family.jpg",
     description:
-      "Spacious accommodation designed for families seeking comfort and relaxation.",
+      "A spacious room designed for families and relaxing stays.",
   },
   {
     title: "Barkada Room",
     image: "/images/rooms/barkada.jpg",
     description:
-      "Ideal for groups looking to enjoy a fun and memorable getaway together.",
+      "A fun accommodation option for friends and larger groups.",
   },
 ];
 
@@ -26,26 +26,67 @@ export default function Rooms() {
   return (
     <section className={styles.rooms}>
       <div className="container">
+
         <p className="section-subtitle">
-          OUR ACCOMMODATIONS
+          OVERNIGHT PACKAGE
         </p>
 
         <h2 className="section-title">
-          Choose Your Perfect Room
+          Your Complete Resort Experience
         </h2>
 
         <p className="section-description">
-          Our overnight package includes access to these comfortable
-          accommodations, allowing you to choose the room that best
-          suits your group.
+          Enjoy an overnight stay at Woodland Escape with comfortable
+          accommodations, exciting activities, and full access to resort
+          amenities.
         </p>
 
+
+        <div className={styles.packageCard}>
+
+          <span className={styles.packageLabel}>
+            Best Value Package
+          </span>
+
+          <h2>
+            ₱15,000
+          </h2>
+
+          <p>
+            A complete overnight resort experience perfect for family
+            gatherings, celebrations, and group getaways.
+          </p>
+
+
+          <ul>
+            <li>✔ Comfortable room accommodation</li>
+            <li>✔ Swimming Pool Access</li>
+            <li>✔ Billiards</li>
+            <li>✔ Videoke</li>
+            <li>✔ Private resort experience</li>
+            <li>✔ Nature relaxation experience</li>
+          </ul>
+
+
+          <button className={styles.packageButton}>
+            Reserve Your Stay
+          </button>
+
+        </div>
+
+
+        <h3 className={styles.includedTitle}>
+          Available Room Options Included
+        </h3>
+
+
         <div className={styles.grid}>
-          {rooms.map((room) => (
+          {accommodations.map((room) => (
             <article
               key={room.title}
               className={styles.card}
             >
+
               <Image
                 src={room.image}
                 alt={room.title}
@@ -55,46 +96,21 @@ export default function Rooms() {
               />
 
               <div className={styles.content}>
+
                 <h3 className={styles.roomTitle}>
                   {room.title}
                 </h3>
 
-                <p>{room.description}</p>
+                <p>
+                  {room.description}
+                </p>
 
-                <button className={styles.button}>
-                  View Details
-                </button>
               </div>
+
             </article>
           ))}
         </div>
 
-        {/* Overnight Package */}
-
-        <div className={styles.packageCard}>
-          <span className={styles.packageLabel}>
-            Overnight Package
-          </span>
-
-          <h2>₱15,000</h2>
-
-          <p>
-            Enjoy a complete overnight experience with comfortable
-            accommodations and access to our resort amenities.
-          </p>
-
-          <ul>
-            <li>✔ Choice of Deluxe, Family, or Barkada Room</li>
-            <li>✔ Swimming Pool Access</li>
-            <li>✔ Billiards</li>
-            <li>✔ Karaoke</li>
-            <li>✔ Relaxing Nature Experience</li>
-          </ul>
-
-          <button className={styles.packageButton}>
-            Book Your Stay
-          </button>
-        </div>
       </div>
     </section>
   );

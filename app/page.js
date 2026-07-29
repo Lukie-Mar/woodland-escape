@@ -4,6 +4,7 @@ import About from "@/components/About";
 import Features from "@/components/Features";
 import Rooms from "@/components/Rooms";
 import Amenities from "@/components/Amenities";
+import Contact from "@/components/Contact";
 export default function Home() {
   return (
     <main>
@@ -13,6 +14,7 @@ export default function Home() {
       <Features />
       <Rooms />
       <Amenities />
+      <Contact />
     </main>
   );
 }
