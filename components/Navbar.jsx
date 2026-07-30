@@ -1,6 +1,6 @@
 import { TreePalm } from "lucide-react";
 import styles from "./Navbar.module.css";
-
+import Link from "next/link";
 export default function Navbar() {
   return (
     <nav className={styles.navbar}>
@@ -10,16 +10,25 @@ export default function Navbar() {
       </a>
 
       <ul className={styles.navList}>
-        <li className={styles.navItem}>Home</li>
-        <li className={styles.navItem}>Rooms</li>
-        <li className={styles.navItem}>Amenities</li>
+        <li className={styles.navItem}>
+          <Link href="/">Home</Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link href="/rooms">Rooms</Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link href="/amenities">Amenities</Link>
+        </li>
         <li className={styles.navItem}>Gallery</li>
         <li className={styles.navItem}>Contact</li>
       </ul>
 
-      <button className={styles.bookBtn}>
-        Book Now
-      </button>
+      <Link
+  href="/booking"
+  className={styles.bookButton}
+>
+  Book Now
+</Link>
     </nav>
   );
 }

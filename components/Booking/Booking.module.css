@@ -1,0 +1,291 @@
+.booking {
+  padding: 100px 0;
+  background: #f7f9f7;
+}
+
+/* =======================
+   Layout
+======================= */
+
+.card {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.9fr;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+@media (max-width: 992px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =======================
+   Cards
+======================= */
+
+.calendarCard,
+.formCard,
+.summaryCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.calendarCard h3,
+.formCard h3,
+.summaryCard h3 {
+  margin-bottom: 20px;
+  color: #1b4332;
+}
+
+/* =======================
+   Calendar
+======================= */
+
+.calendarCard :global(.react-calendar) {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+}
+
+.calendarCard :global(.react-calendar__navigation button) {
+  color: #1b4332;
+  font-weight: 700;
+}
+
+.calendarCard :global(.react-calendar__month-view__weekdays) {
+  text-transform: uppercase;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.calendarCard :global(.react-calendar__tile) {
+  height: 60px;
+  border-radius: 10px;
+  transition: .25s;
+}
+
+.calendarCard :global(.react-calendar__tile:hover) {
+  background: #dceee5;
+}
+
+.calendarCard :global(.react-calendar__tile--active) {
+  background: #2f6f52;
+  color: white;
+}
+
+.calendarCard :global(.react-calendar__tile:disabled) {
+  background: #f2f2f2;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}
+
+.available {
+  border-radius: 10px;
+}
+
+.booked {
+  background: #ffe5e5 !important;
+  color: #d32f2f !important;
+  font-weight: 700;
+}
+
+.bookedLabel {
+  display: block;
+  margin-top: 4px;
+  font-size: 9px;
+  color: #d32f2f;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* =======================
+   Legend
+======================= */
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.availableDot,
+.bookedDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.availableDot {
+  background: #2e7d32;
+}
+
+.bookedDot {
+  background: #d32f2f;
+}
+
+/* =======================
+   Form
+======================= */
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.formGroup label {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: .3s;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #2f6f52;
+  box-shadow: 0 0 0 3px rgba(47,111,82,.15);
+}
+
+.formGroup small {
+  margin-top: 8px;
+  color: #777;
+  font-size: .85rem;
+}
+
+/* =======================
+   Guest Counter
+======================= */
+
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.counter button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  background: #2f6f52;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.counter button:hover {
+  background: #244f3b;
+}
+
+.counter span {
+  font-size: 22px;
+  font-weight: bold;
+  width: 45px;
+  text-align: center;
+}
+
+/* =======================
+   Summary
+======================= */
+
+.summarySection {
+  margin-bottom: 20px;
+}
+
+.summarySection h4 {
+  margin-bottom: 15px;
+  color: #2f6f52;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.summaryItem span {
+  color: #666;
+}
+
+.summaryItem strong {
+  color: #222;
+  text-align: right;
+}
+
+.summaryItem strong small {
+  display: block;
+  margin-top: 3px;
+  color: #777;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #e6e6e6;
+}
+
+.summaryTotal {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.summaryTotal span {
+  display: block;
+  color: #777;
+}
+
+.summaryTotal h2 {
+  margin-top: 8px;
+  color: #2f6f52;
+  font-size: 34px;
+}
+
+/* =======================
+   Button
+======================= */
+
+.button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #2f6f52;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.button:hover {
+  background: #244f3b;
+  transform: translateY(-2px);
+}

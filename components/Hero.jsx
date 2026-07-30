@@ -1,4 +1,5 @@
 import styles from "./Hero.module.css";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -11,13 +12,13 @@ export default function Hero() {
         </p>
 
         <div className={styles.heroButtons}>
-          <button className={styles.heroBtn}>
+          <Link href="/booking" className={styles.heroBtn}>
             Book Now
-          </button>
+          </Link>
 
-          <button className={styles.outlineBtn}>
+          <Link href="/rooms" className={styles.outlineBtn}>
             Explore Rooms
-          </button>
+          </Link>
         </div>
       </div>
     </section>

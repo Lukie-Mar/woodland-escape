@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./Rooms.module.css";
-
+import Link from "next/link";
 const accommodations = [
   {
     title: "Deluxe Room",
@@ -68,10 +68,12 @@ export default function Rooms() {
           </ul>
 
 
-          <button className={styles.packageButton}>
-            Reserve Your Stay
-          </button>
-
+          <Link
+  href="/booking"
+  className={styles.packageButton}
+>
+  Reserve Your Stay
+</Link>
         </div>
 
 

@@ -1,5 +1,5 @@
 import styles from "./Contact.module.css";
-
+import Link from "next/link";
 export default function Contact() {
   return (
     <section className={styles.contact}>
@@ -60,14 +60,12 @@ export default function Contact() {
             </p>
 
 
-            <a
-  href="https://www.facebook.com/profile.php?id=61557390210753"
-  target="_blank"
-  rel="noopener noreferrer"
+           <Link
+  href="/booking"
   className={styles.button}
 >
-  Reserve Now
-</a>
+  Book Online
+</Link>
           </div>
 
         </div>

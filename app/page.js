@@ -5,6 +5,7 @@ import Features from "@/components/Features";
 import Rooms from "@/components/Rooms";
 import Amenities from "@/components/Amenities";
 import Contact from "@/components/Contact";
+import Booking from "@/components/Booking/Booking";
 export default function Home() {
   return (
     <main>
@@ -14,6 +15,7 @@ export default function Home() {
       <Features />
       <Rooms />
       <Amenities />
+      <Booking/>
       <Contact />
     </main>
   );
