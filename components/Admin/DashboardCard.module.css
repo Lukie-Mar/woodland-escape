@@ -1,0 +1,38 @@
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.06);
+  transition: .25s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.icon {
+  width: 65px;
+  height: 65px;
+  border-radius: 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+}
+
+.title {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.value {
+  margin-top: 6px;
+  font-size: 32px;
+  color: #163020;
+}
