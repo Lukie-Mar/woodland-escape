@@ -1,6 +1,7 @@
 import DashboardCard from "@/components/Admin/DashboardCard";
 import RecentReservations from "@/components/Admin/RecentReservations";
 import ReservationCalendar from "@/components/Admin/ReservationCalendar";
+import UpcomingReservation from "@/components/Admin/UpcomingReservation";
 
 import {
   CalendarDays,
@@ -73,96 +74,20 @@ export default function DashboardPage() {
 
       <RecentReservations />
 
-      {/* Calendar & Today's Status */}
+      {/* Calendar & Next Reservation */}
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+          gridTemplateColumns: "2fr 1fr",
           gap: "20px",
           marginTop: "30px",
+          alignItems: "start",
         }}
       >
         <ReservationCalendar />
 
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: "18px",
-            padding: "25px",
-            boxShadow: "0 8px 25px rgba(0,0,0,.06)",
-          }}
-        >
-          <h2
-            style={{
-              color: "#163020",
-              marginBottom: "20px",
-            }}
-          >
-            Today Status
-          </h2>
-
-          <div
-            style={{
-              background: "#DCFCE7",
-              color: "#166534",
-              display: "inline-block",
-              padding: "8px 16px",
-              borderRadius: "999px",
-              fontWeight: "600",
-              marginBottom: "20px",
-            }}
-          >
-            🟢 AVAILABLE
-          </div>
-
-          <p
-            style={{
-              color: "#555",
-              marginBottom: "25px",
-            }}
-          >
-            No reservation has been made for today.
-          </p>
-
-          <hr
-            style={{
-              border: "none",
-              borderTop: "1px solid #eee",
-              margin: "20px 0",
-            }}
-          />
-
-          <div
-            style={{
-              marginBottom: "20px",
-            }}
-          >
-            <h3
-              style={{
-                marginBottom: "8px",
-                color: "#163020",
-              }}
-            >
-              Check-in Time
-            </h3>
-
-            <p>🕑 2:00 PM</p>
-          </div>
-
-          <div>
-            <h3
-              style={{
-                marginBottom: "8px",
-                color: "#163020",
-              }}
-            >
-              Check-out Time
-            </h3>
-
-            <p>🕛 12:00 PM (Next Day)</p>
-          </div>
-        </div>
+        <UpcomingReservation />
       </div>
     </>
   );
