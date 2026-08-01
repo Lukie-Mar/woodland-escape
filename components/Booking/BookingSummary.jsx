@@ -6,6 +6,11 @@ export default function BookingSummary({
   date,
   guests,
   total,
+  amountToPay,
+  remainingBalance,
+  paymentOption,
+  onReserve,
+  loading,
 }) {
   const PACKAGE_PRICE = 15000;
   const INCLUDED_GUESTS = 18;
@@ -66,7 +71,6 @@ export default function BookingSummary({
 
         <div className={styles.summaryItem}>
           <span>Guests</span>
-
           <strong>{guests} Guests</strong>
         </div>
       </div>
@@ -101,18 +105,58 @@ export default function BookingSummary({
 
       <hr className={styles.divider} />
 
+      {/* Payment */}
+
+      <div className={styles.summarySection}>
+        <h4>💳 Payment</h4>
+
+        <div className={styles.summaryItem}>
+          <span>Payment Option</span>
+
+          <strong>
+            {paymentOption === "FULL_PAYMENT"
+              ? "Full Payment"
+              : "Down Payment"}
+          </strong>
+        </div>
+
+        <div className={styles.summaryItem}>
+          <span>Pay Today</span>
+
+          <strong>
+            ₱{amountToPay.toLocaleString()}
+          </strong>
+        </div>
+
+        <div className={styles.summaryItem}>
+          <span>Remaining Balance</span>
+
+          <strong>
+            ₱{remainingBalance.toLocaleString()}
+          </strong>
+        </div>
+      </div>
+
+      <hr className={styles.divider} />
+
       {/* Total */}
 
       <div className={styles.summaryTotal}>
-        <span>Total Amount</span>
+        <span>Total Reservation</span>
 
         <h2>
-          ₱{(total ?? PACKAGE_PRICE).toLocaleString()}
+          ₱{total.toLocaleString()}
         </h2>
       </div>
 
-      <button className={styles.button}>
-        Reserve Now
+      <button
+        className={styles.button}
+        onClick={onReserve}
+        disabled={loading}
+      >
+        {loading
+          ? "Redirecting..."
+          : `Proceed to Pay ₱${amountToPay.toLocaleString()}`}
       </button>
     </div>
   );
