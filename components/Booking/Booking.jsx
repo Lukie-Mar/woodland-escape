@@ -12,7 +12,9 @@ import BookingConfirmModal from "./BookingConfirmModal";
 const PACKAGE_PRICE = 15000;
 const INCLUDED_GUESTS = 18;
 const EXTRA_PERSON_RATE = 150;
+const DOWN_PAYMENT = 5000;
 
+// Temporary until we load from Supabase
 const bookedDates = [
   "2026-08-15",
   "2026-08-22",
@@ -21,16 +23,20 @@ const bookedDates = [
 
 export default function Booking() {
   const [date, setDate] = useState(new Date());
+
   const [guests, setGuests] = useState(INCLUDED_GUESTS);
+
+  const [loading, setLoading] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
 
   const [bookingData, setBookingData] = useState({
     fullName: "",
     contact: "",
     email: "",
     specialRequest: "",
+    paymentOption: "DOWN_PAYMENT",
   });
-
-  const [showModal, setShowModal] = useState(false);
 
   function formatDate(date) {
     return date.toISOString().split("T")[0];
@@ -40,31 +46,48 @@ export default function Booking() {
     return bookedDates.includes(formatDate(date));
   }
 
+  // ------------------------
   // Pricing
+  // ------------------------
+
   const extraGuests = Math.max(
-    0,
-    guests - INCLUDED_GUESTS
+    guests - INCLUDED_GUESTS,
+    0
   );
 
-  const total =
-    PACKAGE_PRICE +
+  const extraCharge =
     extraGuests * EXTRA_PERSON_RATE;
 
-  // Check-out Date
-  const checkOutDate = new Date(date);
-  checkOutDate.setDate(checkOutDate.getDate() + 1);
+  const total =
+    PACKAGE_PRICE + extraCharge;
 
-  // Data passed to confirmation modal
+  const amountToPay =
+    bookingData.paymentOption ===
+    "FULL_PAYMENT"
+      ? total
+      : DOWN_PAYMENT;
+
+  const remainingBalance =
+    total - amountToPay;
+
+  // ------------------------
+  // Check-out
+  // ------------------------
+
+  const checkOutDate = new Date(date);
+
+  checkOutDate.setDate(
+    checkOutDate.getDate() + 1
+  );
+
+  // ------------------------
+  // Reservation Object
+  // ------------------------
+
   const reservation = {
     ...bookingData,
 
-    checkInDate: date.toLocaleDateString("en-PH", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-
-    checkOutDate: checkOutDate.toLocaleDateString(
+    checkInDate: date.toLocaleDateString(
       "en-PH",
       {
         year: "numeric",
@@ -73,9 +96,28 @@ export default function Booking() {
       }
     ),
 
+    checkOutDate:
+      checkOutDate.toLocaleDateString(
+        "en-PH",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }
+      ),
+
     guests,
+
     total,
+
+    amountToPay,
+
+    remainingBalance,
   };
+
+  // ------------------------
+  // Reserve Button
+  // ------------------------
 
   function handleReserve() {
     if (!bookingData.fullName.trim()) {
@@ -84,24 +126,75 @@ export default function Booking() {
     }
 
     if (!bookingData.contact.trim()) {
-      alert("Please enter your contact number.");
+      alert(
+        "Please enter your contact number."
+      );
       return;
     }
 
     setShowModal(true);
   }
 
-  function confirmReservation() {
-    console.log("Reservation:", reservation);
+  // ------------------------
+  // Proceed to PayMongo
+  // ------------------------
 
-    alert(
-      "Reservation submitted successfully!\n\nWe will contact you shortly to confirm your booking."
-    );
+  async function confirmReservation() {
+    try {
+      setLoading(true);
 
-    setShowModal(false);
+      const response = await fetch(
+        "/api/paymongo/checkout",
+        {
+          method: "POST",
 
-    // TODO:
-    // Save reservation to Supabase
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            fullName:
+              bookingData.fullName,
+
+            contact:
+              bookingData.contact,
+
+            email:
+              bookingData.email,
+
+            specialRequest:
+              bookingData.specialRequest,
+
+            checkIn: formatDate(date),
+
+            guests,
+
+            paymentOption:
+              bookingData.paymentOption,
+          }),
+        }
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "Unable to proceed."
+        );
+      }
+
+      window.location.href =
+        result.checkoutUrl;
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+
+      setShowModal(false);
+    }
   }
 
   return (
@@ -121,8 +214,9 @@ export default function Booking() {
           </h2>
 
           <p className="section-description">
-            Select your preferred check-in date and
-            complete your reservation request.
+            Select your preferred
+            check-in date and complete
+            your reservation.
           </p>
 
           <div className={styles.card}>
@@ -135,18 +229,32 @@ export default function Booking() {
 
             <ReservationForm
               bookingData={bookingData}
-              setBookingData={setBookingData}
+              setBookingData={
+                setBookingData
+              }
               guests={guests}
               setGuests={setGuests}
-              includedGuests={INCLUDED_GUESTS}
-              extraPersonRate={EXTRA_PERSON_RATE}
+              includedGuests={
+                INCLUDED_GUESTS
+              }
+              extraPersonRate={
+                EXTRA_PERSON_RATE
+              }
             />
 
             <BookingSummary
               date={date}
               guests={guests}
               total={total}
+              amountToPay={amountToPay}
+              remainingBalance={
+                remainingBalance
+              }
+              paymentOption={
+                bookingData.paymentOption
+              }
               onReserve={handleReserve}
+              loading={loading}
             />
 
           </div>
@@ -156,9 +264,14 @@ export default function Booking() {
 
       <BookingConfirmModal
         open={showModal}
-        onClose={() => setShowModal(false)}
-        onConfirm={confirmReservation}
+        onClose={() =>
+          setShowModal(false)
+        }
+        onConfirm={
+          confirmReservation
+        }
         bookingData={reservation}
+        loading={loading}
       />
     </>
   );

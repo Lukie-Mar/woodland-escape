@@ -2,6 +2,8 @@
 
 import styles from "./Booking.module.css";
 
+const DOWN_PAYMENT = 5000;
+
 export default function ReservationForm({
   bookingData,
   setBookingData,
@@ -14,10 +16,10 @@ export default function ReservationForm({
   function handleChange(e) {
     const { name, value } = e.target;
 
-    setBookingData({
-      ...bookingData,
+    setBookingData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   }
 
   function handleGuestChange(e) {
@@ -96,6 +98,51 @@ export default function ReservationForm({
           Additional guests are charged{" "}
           <strong>₱{extraPersonRate}</strong> each.
         </small>
+      </div>
+
+      {/* Payment Option */}
+
+      <div className={styles.formGroup}>
+        <label>Payment Option</label>
+
+        <label className={styles.radioOption}>
+          <input
+            type="radio"
+            name="paymentOption"
+            value="DOWN_PAYMENT"
+            checked={
+              bookingData.paymentOption ===
+              "DOWN_PAYMENT"
+            }
+            onChange={handleChange}
+          />
+
+          <span>
+            <strong>Down Payment</strong>
+            <br />
+            Pay only <strong>₱{DOWN_PAYMENT.toLocaleString()}</strong> today
+            and settle the remaining balance upon check-in.
+          </span>
+        </label>
+
+        <label className={styles.radioOption}>
+          <input
+            type="radio"
+            name="paymentOption"
+            value="FULL_PAYMENT"
+            checked={
+              bookingData.paymentOption ===
+              "FULL_PAYMENT"
+            }
+            onChange={handleChange}
+          />
+
+          <span>
+            <strong>Full Payment</strong>
+            <br />
+            Pay the full reservation amount online.
+          </span>
+        </label>
       </div>
 
       {/* Special Request */}

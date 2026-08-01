@@ -384,3 +384,29 @@
 .confirmButton:hover {
   background: #244f3b;
 }
+
+.radioOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.radioOption:hover {
+  border-color: #2f855a;
+  background: #f7faf8;
+}
+
+.radioOption input[type="radio"] {
+  margin-top: 4px;
+  transform: scale(1.2);
+}
+
+.radioOption span {
+  line-height: 1.5;
+}
