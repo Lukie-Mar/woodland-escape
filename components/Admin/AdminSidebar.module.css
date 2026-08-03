@@ -1,13 +1,18 @@
 .sidebar {
-  width: 260px;
+  width: 270px;
   min-height: 100vh;
-  background: #163020;
+  position: sticky;
+  top: 0;
+
+  background: linear-gradient(180deg, #163020 0%, #102417 100%);
   color: white;
 
   display: flex;
   flex-direction: column;
 
-  padding: 24px;
+  padding: 28px 22px;
+
+  box-sizing: border-box;
 }
 
 .logo {
@@ -15,24 +20,30 @@
   align-items: center;
   gap: 14px;
 
-  margin-bottom: 50px;
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .logo h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .logo span {
+  display: block;
+  margin-top: 2px;
+
   font-size: 13px;
-  color: #d4d4d4;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-
+  gap: 8px;
   flex: 1;
 }
 
@@ -46,53 +57,73 @@
   border-radius: 12px;
 
   color: white;
-
   text-decoration: none;
+  font-weight: 500;
 
-  transition: 0.25s;
+  transition: all .25s ease;
 }
 
 .link:hover {
-  background: rgba(255,255,255,.08);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
 }
 
 .active {
   background: #2f855a;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .18);
 }
 
 .logout {
-  margin-top: auto;
+  margin-top: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  width: 100%;
 
   background: #c53030;
-
   color: white;
 
   border: none;
+  border-radius: 12px;
 
   padding: 14px;
 
-  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
 
   cursor: pointer;
 
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  gap: 10px;
-
-  transition: .25s;
+  transition: all .25s ease;
 }
 
 .logout:hover {
   background: #9b2c2c;
+  transform: translateY(-2px);
+}
+
+.logout:active {
+  transform: translateY(0);
 }
 
 @media (max-width: 900px) {
   .sidebar {
+    position: relative;
     width: 100%;
     min-height: auto;
+  }
+
+  .logo {
+    margin-bottom: 20px;
+  }
+
+  .menu {
+    gap: 6px;
+  }
+
+  .logout {
+    margin-top: 20px;
   }
 }

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   CalendarDays,
+  CalendarX,
   CreditCard,
   BarChart3,
   Settings,
@@ -26,6 +27,11 @@ const menuItems = [
     icon: CalendarDays,
   },
   {
+    title: "Availability",
+    href: "/admin/availability",
+    icon: CalendarX,
+  },
+  {
     title: "Payments",
     href: "/admin/payments",
     icon: CreditCard,
@@ -44,6 +50,11 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+
+  const handleLogout = () => {
+    // We'll connect this to Supabase Auth later.
+    console.log("Logout clicked");
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -74,7 +85,11 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <button className={styles.logout}>
+      <button
+        className={styles.logout}
+        onClick={handleLogout}
+        type="button"
+      >
         <LogOut size={20} />
         Logout
       </button>
