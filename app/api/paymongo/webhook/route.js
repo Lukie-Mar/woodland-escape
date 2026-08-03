@@ -1,109 +1,147 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { verifyWebhook } from "@/lib/paymongo/verifyWebhook";
 
 export async function POST(req) {
   try {
-    const body = await req.json();
+    // Read raw body (required for PayMongo signature verification)
+    const rawBody = await req.text();
 
-    console.log("PayMongo Webhook:", body);
+    const signature = req.headers.get(
+      "paymongo-signature"
+    );
 
-    const eventType = body.data?.attributes?.type;
+    // Verify signature
+    const isValid = verifyWebhook(
+      rawBody,
+      signature
+    );
 
-    // We only care about successful checkout payments
-    if (eventType !== "checkout_session.payment.paid") {
+    if (!isValid) {
+      console.error(
+        "❌ Invalid webhook signature."
+      );
+
+      return NextResponse.json(
+        {
+          error: "Invalid signature.",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    // Parse JSON after verification
+    const body = JSON.parse(rawBody);
+
+    console.log(
+      "========== PAYMONGO WEBHOOK =========="
+    );
+    console.dir(body, { depth: null });
+
+    const eventId = body.data?.id;
+    const eventType =
+      body.data?.attributes?.type;
+
+    // Ignore other webhook events
+    if (
+      eventType !==
+      "checkout_session.payment.paid"
+    ) {
+      console.log(
+        "Ignoring webhook:",
+        eventType
+      );
+
       return NextResponse.json({
         received: true,
       });
     }
 
-    const checkout =
-      body.data.attributes.data.attributes;
+   const checkoutData = body.data.attributes.data;
 
-    const checkoutId =
-      checkout.checkout_session_id;
+    const checkoutId = checkoutData.id;
 
-    const paymentId =
-      checkout.payment_id;
+const paymentId =
+  checkoutData.attributes.payments?.[0]?.id;
 
-    // Find reservation using checkout ID
-    const { data: reservation, error } =
-      await supabaseAdmin
-        .from("reservations")
-        .select("*")
-        .eq(
-          "paymongo_checkout_id",
-          checkoutId
-        )
-        .single();
+if (!checkoutId || !paymentId) {
+  console.error("Missing checkout/payment IDs", {
+    checkoutId,
+    paymentId,
+  });
 
-    if (error || !reservation) {
-      console.error(
-        "Reservation not found."
+  return NextResponse.json(
+    {
+      error: "Invalid PayMongo webhook payload.",
+    },
+    {
+      status: 400,
+    }
+  );
+}
+
+    console.log("===== WEBHOOK VALUES =====");
+   console.log({
+  eventId,
+  eventType,
+  checkoutId,
+  paymentId,
+});
+
+    console.log(
+      "Calling confirm_reservation_payment..."
+    );
+
+    const rpcResult =
+      await supabaseAdmin.rpc(
+        "confirm_reservation_payment",
+        {
+          p_checkout_id: checkoutId,
+          p_payment_id: paymentId,
+          p_event_id: eventId,
+        }
       );
+
+    console.log("===== RPC RESULT =====");
+    console.dir(rpcResult, {
+      depth: null,
+    });
+
+    if (rpcResult.error) {
+      console.error("RPC ERROR:");
+      console.dir(rpcResult.error, {
+        depth: null,
+      });
 
       return NextResponse.json(
         {
           error:
-            "Reservation not found.",
+            "Database transaction failed.",
         },
         {
-          status: 404,
+          status: 500,
         }
       );
     }
 
-    // Update reservation
-    await supabaseAdmin
-      .from("reservations")
-      .update({
-        reservation_status:
-          "CONFIRMED",
-
-        paymongo_payment_id:
-          paymentId,
-      })
-      .eq("id", reservation.id);
-
-    // Save payment record
-    await supabaseAdmin
-      .from("payments")
-      .insert([
-        {
-          reservation_id:
-            reservation.id,
-
-          amount:
-            reservation.amount_to_pay,
-
-          payment_status: "PAID",
-
-          payment_method: "PAYMONGO",
-
-          paymongo_payment_id:
-            paymentId,
-        },
-      ]);
-
-    // Mark date unavailable
-    await supabaseAdmin
-      .from("availability")
-      .upsert({
-        booking_date:
-          reservation.check_in,
-
-        is_available: false,
-      });
+    console.log(
+      "✅ Reservation confirmed successfully."
+    );
 
     return NextResponse.json({
       success: true,
     });
   } catch (err) {
+    console.error(
+      "========== WEBHOOK ERROR =========="
+    );
     console.error(err);
 
     return NextResponse.json(
       {
-        error:
-          "Webhook failed.",
+        error: "Webhook failed.",
       },
       {
         status: 500,
