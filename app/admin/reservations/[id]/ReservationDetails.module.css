@@ -1,0 +1,56 @@
+.container{
+display:flex;
+flex-direction:column;
+gap:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:24px;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:18px;
+box-shadow:0 8px 24px rgba(0,0,0,.06);
+}
+
+.card h2{
+margin-top:0;
+margin-bottom:20px;
+color:#163020;
+}
+
+.card p{
+margin:12px 0;
+}
+
+.actions{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.actions button{
+border:none;
+padding:14px 24px;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+color:white;
+}
+
+.green{background:#16a34a;}
+.blue{background:#2563eb;}
+.orange{background:#ea580c;}
+.red{background:#dc2626;}
+
+@media(max-width:900px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+}
