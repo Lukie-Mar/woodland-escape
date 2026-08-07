@@ -1,23 +1,15 @@
 import AdminSidebar from "@/components/Admin/AdminSidebar";
+import styles from "./AdminLayout.module.css";
 
 export default function AdminLayout({ children }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "#f5f7fa",
-      }}
-    >
+    <div className={styles.wrapper}>
       <AdminSidebar />
 
-      <main
-        style={{
-          flex: 1,
-          padding: "40px",
-        }}
-      >
-        {children}
+      <main className={styles.main}>
+        <div className={styles.content}>
+          {children}
+        </div>
       </main>
     </div>
   );

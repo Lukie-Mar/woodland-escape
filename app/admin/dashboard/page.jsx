@@ -1,48 +1,40 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-
 import styles from "./Dashboard.module.css";
 
 export default async function DashboardPage() {
-  const [
-    reservationsResult,
-    confirmedResult,
-    pendingResult,
-    revenueResult,
-    recentReservations,
-  ] = await Promise.all([
-    supabaseAdmin.from("reservations").select("*", { count: "exact", head: true }),
+  // Fetch reservations
+  const { data: reservations = [] } = await supabaseAdmin
+    .from("reservations")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-    supabaseAdmin
-      .from("reservations")
-      .select("*", { count: "exact", head: true })
-      .eq("reservation_status", "CONFIRMED"),
+  // Fetch payments
+  const { data: payments = [] } = await supabaseAdmin
+    .from("payments")
+    .select("*");
 
-    supabaseAdmin
-      .from("reservations")
-      .select("*", { count: "exact", head: true })
-      .eq("reservation_status", "PENDING_PAYMENT"),
+  const totalReservations = reservations.length;
 
-    supabaseAdmin
-      .from("reservations")
-      .select("amount_paid")
-      .eq("reservation_status", "CONFIRMED"),
+  const confirmedReservations = reservations.filter(
+    (r) => r.reservation_status === "CONFIRMED"
+  ).length;
 
-    supabaseAdmin
-      .from("reservations")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(8),
-  ]);
+  const pendingReservations = reservations.filter(
+    (r) => r.reservation_status === "PENDING_PAYMENT"
+  ).length;
 
-  const totalReservations = reservationsResult.count ?? 0;
-  const confirmedReservations = confirmedResult.count ?? 0;
-  const pendingReservations = pendingResult.count ?? 0;
+  const totalRevenue = payments.reduce(
+    (sum, payment) => sum + Number(payment.amount || 0),
+    0
+  );
 
-  const revenue =
-    revenueResult.data?.reduce(
-      (sum, reservation) => sum + (reservation.amount_paid || 0),
-      0
-    ) || 0;
+  const remainingBalance = reservations.reduce((sum, reservation) => {
+    if (reservation.payment_option === "DOWN_PAYMENT") {
+      return sum + Number(reservation.remaining_balance || 0);
+    }
+
+    return sum;
+  }, 0);
 
   return (
     <div className={styles.container}>
@@ -53,57 +45,57 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      {/* Statistics */}
+
       <div className={styles.cards}>
         <div className={styles.card}>
           <h3>Total Reservations</h3>
-          <h2>{totalReservations}</h2>
+          <span>{totalReservations}</span>
         </div>
 
         <div className={styles.card}>
           <h3>Confirmed</h3>
-          <h2>{confirmedReservations}</h2>
+          <span>{confirmedReservations}</span>
         </div>
 
         <div className={styles.card}>
           <h3>Pending</h3>
-          <h2>{pendingReservations}</h2>
+          <span>{pendingReservations}</span>
         </div>
 
         <div className={styles.card}>
-          <h3>Revenue</h3>
-          <h2>
-            ₱{revenue.toLocaleString("en-PH")}
-          </h2>
+          <h3>Total Revenue</h3>
+          <span>₱{totalRevenue.toLocaleString()}</span>
+        </div>
+
+        <div className={styles.card}>
+          <h3>Remaining Balance</h3>
+          <span>₱{remainingBalance.toLocaleString()}</span>
         </div>
       </div>
 
+      {/* Recent Reservations */}
+
       <div className={styles.tableCard}>
-        <div className={styles.tableHeader}>
-          <h2>Recent Reservations</h2>
-        </div>
+        <h2>Recent Reservations</h2>
 
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Reservation</th>
+              <th>Reservation Code</th>
               <th>Guest</th>
               <th>Check-in</th>
-              <th>Payment</th>
               <th>Status</th>
+              <th>Payment</th>
             </tr>
           </thead>
 
           <tbody>
-            {recentReservations.data?.map((reservation) => (
+            {reservations.slice(0, 10).map((reservation) => (
               <tr key={reservation.id}>
                 <td>{reservation.reservation_code}</td>
-
                 <td>{reservation.full_name}</td>
-
                 <td>{reservation.check_in}</td>
-
-                <td>{reservation.payment_option}</td>
-
                 <td>
                   <span
                     className={
@@ -115,12 +107,15 @@ export default async function DashboardPage() {
                     {reservation.reservation_status}
                   </span>
                 </td>
+                <td>{reservation.payment_option}</td>
               </tr>
             ))}
 
-            {recentReservations.data?.length === 0 && (
+            {reservations.length === 0 && (
               <tr>
-                <td colSpan="5">No reservations yet.</td>
+                <td colSpan={5} style={{ textAlign: "center" }}>
+                  No reservations found.
+                </td>
               </tr>
             )}
           </tbody>
