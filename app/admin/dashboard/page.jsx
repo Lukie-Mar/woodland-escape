@@ -1,4 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import DashboardCards from "@/components/Admin/DashboardCards";
+
 import styles from "./Dashboard.module.css";
 
 export default async function DashboardPage() {
@@ -11,33 +13,12 @@ export default async function DashboardPage() {
   // Fetch payments
   const { data: payments = [] } = await supabaseAdmin
     .from("payments")
-    .select("*");
-
-  const totalReservations = reservations.length;
-
-  const confirmedReservations = reservations.filter(
-    (r) => r.reservation_status === "CONFIRMED"
-  ).length;
-
-  const pendingReservations = reservations.filter(
-    (r) => r.reservation_status === "PENDING_PAYMENT"
-  ).length;
-
-  const totalRevenue = payments.reduce(
-    (sum, payment) => sum + Number(payment.amount || 0),
-    0
-  );
-
-  const remainingBalance = reservations.reduce((sum, reservation) => {
-    if (reservation.payment_option === "DOWN_PAYMENT") {
-      return sum + Number(reservation.remaining_balance || 0);
-    }
-
-    return sum;
-  }, 0);
+    .select("*")
+    .order("created_at", { ascending: false });
 
   return (
     <div className={styles.container}>
+      {/* Dashboard Header */}
       <div className={styles.header}>
         <div>
           <h1>Dashboard</h1>
@@ -45,37 +26,13 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Statistics */}
-
-      <div className={styles.cards}>
-        <div className={styles.card}>
-          <h3>Total Reservations</h3>
-          <span>{totalReservations}</span>
-        </div>
-
-        <div className={styles.card}>
-          <h3>Confirmed</h3>
-          <span>{confirmedReservations}</span>
-        </div>
-
-        <div className={styles.card}>
-          <h3>Pending</h3>
-          <span>{pendingReservations}</span>
-        </div>
-
-        <div className={styles.card}>
-          <h3>Total Revenue</h3>
-          <span>₱{totalRevenue.toLocaleString()}</span>
-        </div>
-
-        <div className={styles.card}>
-          <h3>Remaining Balance</h3>
-          <span>₱{remainingBalance.toLocaleString()}</span>
-        </div>
-      </div>
+      {/* Statistics Cards */}
+      <DashboardCards
+        reservations={reservations}
+        payments={payments}
+      />
 
       {/* Recent Reservations */}
-
       <div className={styles.tableCard}>
         <h2>Recent Reservations</h2>
 
@@ -94,8 +51,11 @@ export default async function DashboardPage() {
             {reservations.slice(0, 10).map((reservation) => (
               <tr key={reservation.id}>
                 <td>{reservation.reservation_code}</td>
+
                 <td>{reservation.full_name}</td>
+
                 <td>{reservation.check_in}</td>
+
                 <td>
                   <span
                     className={
@@ -107,13 +67,17 @@ export default async function DashboardPage() {
                     {reservation.reservation_status}
                   </span>
                 </td>
+
                 <td>{reservation.payment_option}</td>
               </tr>
             ))}
 
             {reservations.length === 0 && (
               <tr>
-                <td colSpan={5} style={{ textAlign: "center" }}>
+                <td
+                  colSpan={5}
+                  style={{ textAlign: "center" }}
+                >
                   No reservations found.
                 </td>
               </tr>
