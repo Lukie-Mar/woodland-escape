@@ -1,0 +1,351 @@
+.wrapper {
+  width: 100%;
+}
+
+/* =========================
+   FILTERS
+========================= */
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 20px 28px;
+
+  border-bottom: 1px solid #eee;
+
+  background: #ffffff;
+
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+
+  flex: 1;
+  min-width: 260px;
+
+  height: 42px;
+
+  border: 1px solid #dfe5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition: 0.2s ease;
+}
+
+.searchBox:focus-within {
+  border-color: #2f855a;
+  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
+}
+
+.searchIcon {
+  padding-left: 14px;
+
+  font-size: 21px;
+
+  color: #777;
+}
+
+.searchBox input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  padding: 0 12px;
+
+  font-size: 14px;
+
+  color: #333;
+
+  background: transparent;
+}
+
+.searchBox input::placeholder {
+  color: #999;
+}
+
+.select {
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dfe5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #444;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  outline: none;
+}
+
+.select:focus {
+  border-color: #2f855a;
+}
+
+.clearButton {
+  height: 42px;
+
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #f3f4f6;
+
+  color: #555;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.clearButton:hover {
+  background: #e5e7eb;
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.resultsHeader {
+  padding: 14px 28px;
+
+  background: #fafafa;
+
+  border-bottom: 1px solid #eee;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.resultsHeader strong {
+  color: #163020;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 1200px;
+}
+
+.table thead {
+  background: #f8fafc;
+}
+
+.table th {
+  padding: 16px 18px;
+
+  text-align: left;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #666;
+
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 18px;
+
+  border-top: 1px solid #eee;
+
+  font-size: 14px;
+
+  color: #333;
+
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* =========================
+   RESERVATION
+========================= */
+
+.reservationCode {
+  color: #163020;
+
+  font-size: 14px;
+}
+
+/* =========================
+   GUEST
+========================= */
+
+.guest {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.guest strong {
+  color: #163020;
+}
+
+.guest span {
+  font-size: 12px;
+
+  color: #888;
+}
+
+/* =========================
+   BALANCE
+========================= */
+
+.balance {
+  color: #d97706;
+
+  font-weight: 600;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 14px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.confirmed {
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+.pending {
+  background: #fef3c7;
+
+  color: #92400e;
+}
+
+.cancelled {
+  background: #fee2e2;
+
+  color: #991b1b;
+}
+
+.defaultStatus {
+  background: #e5e7eb;
+
+  color: #374151;
+}
+
+/* =========================
+   VIEW BUTTON
+========================= */
+
+.viewButton {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 14px;
+
+  border-radius: 9px;
+
+  background: #edf8f2;
+
+  color: #2f855a;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.viewButton:hover {
+  background: #2f855a;
+
+  color: #ffffff;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty {
+  padding: 60px 30px;
+
+  text-align: center;
+}
+
+.empty h3 {
+  margin: 0;
+
+  color: #163020;
+}
+
+.empty p {
+  margin-top: 8px;
+
+  color: #777;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .filters {
+    padding: 18px;
+  }
+
+  .searchBox {
+    min-width: 100%;
+  }
+
+  .select {
+    flex: 1;
+    min-width: 180px;
+  }
+}
