@@ -1,56 +1,421 @@
-.container{
-display:flex;
-flex-direction:column;
-gap:30px;
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:24px;
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  width: 100%;
 }
 
-.card{
-background:#fff;
-padding:25px;
-border-radius:18px;
-box-shadow:0 8px 24px rgba(0,0,0,.06);
+.backButton {
+  display: inline-flex;
+  align-items: center;
+
+  margin-bottom: 18px;
+
+  color: #2f855a;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: 0.2s ease;
 }
 
-.card h2{
-margin-top:0;
-margin-bottom:20px;
-color:#163020;
+.backButton:hover {
+  color: #163020;
 }
 
-.card p{
-margin:12px 0;
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
 }
 
-.actions{
-display:flex;
-gap:15px;
-flex-wrap:wrap;
+.label {
+  margin: 0 0 5px;
+
+  color: #777;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.actions button{
-border:none;
-padding:14px 24px;
-border-radius:10px;
-font-weight:600;
-cursor:pointer;
-color:white;
+.titleRow h1 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 34px;
 }
 
-.green{background:#16a34a;}
-.blue{background:#2563eb;}
-.orange{background:#ea580c;}
-.red{background:#dc2626;}
+.created {
+  margin: 7px 0 0;
 
-@media(max-width:900px){
+  color: #888;
 
-.grid{
-grid-template-columns:1fr;
+  font-size: 13px;
 }
 
+/* =========================
+   STATUS
+========================= */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 9px 17px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.confirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.defaultStatus {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #eee;
+
+  background: #fafcfb;
+}
+
+.cardHeader h2 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 19px;
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.details {
+  display: flex;
+  flex-direction: column;
+
+  padding: 8px 24px;
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail:last-child {
+  border-bottom: none;
+}
+
+.detail span {
+  color: #777;
+
+  font-size: 13px;
+}
+
+.detail strong {
+  color: #333;
+
+  font-size: 14px;
+
+  text-align: right;
+
+  word-break: break-word;
+}
+
+/* =========================
+   TOTAL
+========================= */
+
+.totalRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 8px -24px 0;
+
+  padding: 18px 24px;
+
+  background: #edf8f2;
+}
+
+.totalRow span {
+  color: #163020;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.totalRow strong {
+  color: #2f855a;
+
+  font-size: 20px;
+}
+
+/* =========================
+   PAYMENT
+========================= */
+
+.paid {
+  color: #166534 !important;
+}
+
+.balance {
+  color: #d97706 !important;
+}
+
+/* =========================
+   REFERENCES
+========================= */
+
+.reference {
+  max-width: 260px;
+
+  color: #555 !important;
+
+  font-family: monospace;
+
+  font-size: 12px !important;
+}
+
+/* =========================
+   FULL WIDTH
+========================= */
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* =========================
+   SPECIAL REQUESTS
+========================= */
+
+.requests {
+  padding: 24px;
+}
+
+.requests p {
+  margin: 0;
+
+  color: #444;
+
+  line-height: 1.7;
+}
+
+.noRequests {
+  color: #999 !important;
+  font-style: italic;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  padding: 22px;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.actions button {
+  border: none;
+
+  padding: 12px 18px;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.green {
+  background: #2f855a;
+}
+
+.green:hover {
+  background: #276749;
+}
+
+.blue {
+  background: #3182ce;
+}
+
+.blue:hover {
+  background: #2b6cb0;
+}
+
+.orange {
+  background: #dd6b20;
+}
+
+.orange:hover {
+  background: #c05621;
+}
+
+.red {
+  background: #c53030;
+}
+
+.red:hover {
+  background: #9b2c2c;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+
+  .titleRow {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .titleRow h1 {
+    font-size: 28px;
+  }
+
+  .status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    gap: 20px;
+  }
+
+  .cardHeader {
+    padding: 18px;
+  }
+
+  .details {
+    padding: 8px 18px;
+  }
+
+  .detail {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .detail strong {
+    text-align: left;
+  }
+
+  .reference {
+    max-width: 100%;
+  }
+
+  .totalRow {
+    margin-left: -18px;
+    margin-right: -18px;
+
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .actions {
+    flex-direction: column;
+
+    padding: 18px;
+  }
+
+  .actions button {
+    width: 100%;
+  }
 }

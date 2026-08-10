@@ -1,86 +1,328 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
+
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 import styles from "./ReservationDetails.module.css";
 
+function formatCurrency(amount) {
+  return `₱${Number(amount || 0).toLocaleString("en-PH")}`;
+}
+
+function formatDate(date) {
+  if (!date) return "—";
+
+  return new Date(`${date}T00:00:00`).toLocaleDateString("en-PH", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatStatus(status) {
+  if (status === "CONFIRMED") return "Confirmed";
+  if (status === "PENDING_PAYMENT") return "Pending Payment";
+  if (status === "CANCELLED") return "Cancelled";
+
+  return status || "Unknown";
+}
+
 export default async function ReservationDetails({ params }) {
   const { id } = await params;
 
-  const { data: reservation } = await supabaseAdmin
+  const { data: reservation, error } = await supabaseAdmin
     .from("reservations")
     .select("*")
     .eq("id", id)
     .single();
 
-  if (!reservation) {
+  if (error || !reservation) {
     notFound();
   }
 
-  const remaining =
-    (reservation.total_amount || 0) -
-    (reservation.amount_paid || 0);
+  const totalAmount = Number(reservation.total_amount || 0);
+  const amountPaid = Number(reservation.amount_paid || 0);
+
+  const remainingBalance =
+    reservation.remaining_balance !== null &&
+    reservation.remaining_balance !== undefined
+      ? Number(reservation.remaining_balance)
+      : Math.max(totalAmount - amountPaid, 0);
 
   return (
     <div className={styles.container}>
-      <h1>{reservation.reservation_code}</h1>
+      {/* =========================
+          HEADER
+      ========================= */}
 
-      <div className={styles.grid}>
+      <div className={styles.header}>
+        <div>
+          <Link
+            href="/admin/reservations"
+            className={styles.backButton}
+          >
+            ← Back to Reservations
+          </Link>
 
-        <div className={styles.card}>
-          <h2>Guest Information</h2>
+          <div className={styles.titleRow}>
+            <div>
+              <p className={styles.label}>Reservation</p>
 
-          <p><strong>Name:</strong> {reservation.full_name}</p>
-          <p><strong>Email:</strong> {reservation.email}</p>
-          <p><strong>Phone:</strong> {reservation.phone}</p>
+              <h1>{reservation.reservation_code}</h1>
+
+              <p className={styles.created}>
+                Created{" "}
+                {reservation.created_at
+                  ? new Date(
+                      reservation.created_at
+                    ).toLocaleDateString("en-PH", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : "—"}
+              </p>
+            </div>
+
+            <span
+              className={`${styles.status} ${
+                reservation.reservation_status === "CONFIRMED"
+                  ? styles.confirmed
+                  : reservation.reservation_status ===
+                    "PENDING_PAYMENT"
+                  ? styles.pending
+                  : reservation.reservation_status ===
+                    "CANCELLED"
+                  ? styles.cancelled
+                  : styles.defaultStatus
+              }`}
+            >
+              {formatStatus(reservation.reservation_status)}
+            </span>
+          </div>
         </div>
-
-        <div className={styles.card}>
-          <h2>Reservation</h2>
-
-          <p><strong>Check-in:</strong> {reservation.check_in}</p>
-          <p><strong>Check-out:</strong> {reservation.check_out}</p>
-          <p><strong>Guests:</strong> {reservation.number_of_guests}</p>
-        </div>
-
-        <div className={styles.card}>
-          <h2>Payment</h2>
-
-          <p>
-            <strong>Total:</strong>
-            {" "}
-            ₱{reservation.total_amount?.toLocaleString("en-PH")}
-          </p>
-
-          <p>
-            <strong>Paid:</strong>
-            {" "}
-            ₱{reservation.amount_paid?.toLocaleString("en-PH")}
-          </p>
-
-          <p>
-            <strong>Remaining:</strong>
-            {" "}
-            ₱{remaining.toLocaleString("en-PH")}
-          </p>
-
-          <p>
-            <strong>Method:</strong>
-            {" "}
-            {reservation.payment_option}
-          </p>
-        </div>
-
       </div>
 
-      <div className={styles.actions}>
+      {/* =========================
+          MAIN GRID
+      ========================= */}
 
+      <div className={styles.grid}>
+        {/* Guest Information */}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>Guest Information</h2>
+          </div>
+
+          <div className={styles.details}>
+            <div className={styles.detail}>
+              <span>Full Name</span>
+              <strong>{reservation.full_name || "—"}</strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Contact Number</span>
+              <strong>{reservation.contact_number || "—"}</strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Email</span>
+              <strong>{reservation.email || "—"}</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Stay Information */}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>Stay Information</h2>
+          </div>
+
+          <div className={styles.details}>
+            <div className={styles.detail}>
+              <span>Check-in</span>
+              <strong>{formatDate(reservation.check_in)}</strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Check-in Time</span>
+              <strong>{reservation.check_in_time || "2:00 PM"}</strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Check-out</span>
+              <strong>{formatDate(reservation.check_out)}</strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Check-out Time</span>
+              <strong>
+                {reservation.check_out_time || "12:00 PM"}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Number of Guests</span>
+              <strong>{reservation.guests || 0}</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Package Information */}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>Package</h2>
+          </div>
+
+          <div className={styles.details}>
+            <div className={styles.detail}>
+              <span>Package Price</span>
+              <strong>
+                {formatCurrency(reservation.package_price)}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Included Guests</span>
+              <strong>
+                {reservation.included_guests || 0}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Extra Guests</span>
+              <strong>
+                {reservation.extra_guests || 0}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Extra Guest Fee</span>
+              <strong>
+                {formatCurrency(reservation.extra_guest_fee)}
+              </strong>
+            </div>
+
+            <div className={styles.totalRow}>
+              <span>Total Amount</span>
+              <strong>{formatCurrency(totalAmount)}</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Information */}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>Payment Information</h2>
+          </div>
+
+          <div className={styles.details}>
+            <div className={styles.detail}>
+              <span>Payment Option</span>
+              <strong>
+                {reservation.payment_option || "—"}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Amount To Pay</span>
+              <strong>
+                {formatCurrency(reservation.amount_to_pay)}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Amount Paid</span>
+              <strong className={styles.paid}>
+                {formatCurrency(amountPaid)}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Remaining Balance</span>
+              <strong className={styles.balance}>
+                {formatCurrency(remainingBalance)}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Payment Status</span>
+              <strong>
+                {reservation.payment_status || "—"}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Payment Method</span>
+              <strong>
+                {reservation.payment_method || "—"}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        {/* PayMongo Information */}
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2>Payment Reference</h2>
+          </div>
+
+          <div className={styles.details}>
+            <div className={styles.detail}>
+              <span>PayMongo Payment ID</span>
+              <strong className={styles.reference}>
+                {reservation.paymongo_payment_id || "—"}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>PayMongo Reference</span>
+              <strong className={styles.reference}>
+                {reservation.paymongo_reference || "—"}
+              </strong>
+            </div>
+
+            <div className={styles.detail}>
+              <span>Checkout ID</span>
+              <strong className={styles.reference}>
+                {reservation.paymongo_checkout_id || "—"}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Special Requests */}
+        <div className={`${styles.card} ${styles.fullWidth}`}>
+          <div className={styles.cardHeader}>
+            <h2>Special Requests</h2>
+          </div>
+
+          <div className={styles.requests}>
+            {reservation.special_requests ? (
+              <p>{reservation.special_requests}</p>
+            ) : (
+              <p className={styles.noRequests}>
+                No special requests provided.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* =========================
+          ACTIONS
+      ========================= */}
+
+      <div className={styles.actions}>
         <button className={styles.green}>
           Confirm Check-in
         </button>
 
-        <button className={styles.blue}>
-          Record Balance Payment
-        </button>
+        {remainingBalance > 0 && (
+          <button className={styles.blue}>
+            Record Balance Payment
+          </button>
+        )}
 
         <button className={styles.orange}>
           Check-out Guest
@@ -89,7 +331,6 @@ export default async function ReservationDetails({ params }) {
         <button className={styles.red}>
           Cancel Reservation
         </button>
-
       </div>
     </div>
   );
