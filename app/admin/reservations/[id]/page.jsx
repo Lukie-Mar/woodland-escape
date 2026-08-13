@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 import ConfirmCheckIn from "./ConfirmCheckIn";
+import CheckOutGuest from "./CheckOutGuest";
 import RecordBalancePayment from "./RecordBalancePayment";
+
 import styles from "./ReservationDetails.module.css";
 
 function formatCurrency(amount) {
@@ -25,23 +27,40 @@ function formatDate(date) {
 }
 
 function formatStatus(status) {
-  if (status === "CONFIRMED") return "Confirmed";
-  if (status === "PENDING_PAYMENT") return "Pending Payment";
-  if (status === "CHECKED_IN") return "Checked In";
-  if (status === "CHECKED_OUT") return "Checked Out";
-  if (status === "CANCELLED") return "Cancelled";
+  if (status === "CONFIRMED") {
+    return "Confirmed";
+  }
+
+  if (status === "PENDING_PAYMENT") {
+    return "Pending Payment";
+  }
+
+  if (status === "CHECKED_IN") {
+    return "Checked In";
+  }
+
+  if (status === "CHECKED_OUT") {
+    return "Checked Out";
+  }
+
+  if (status === "CANCELLED") {
+    return "Cancelled";
+  }
 
   return status || "Unknown";
 }
 
-export default async function ReservationDetails({ params }) {
+export default async function ReservationDetails({
+  params,
+}) {
   const { id } = await params;
 
-  const { data: reservation, error } = await supabaseAdmin
-    .from("reservations")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const { data: reservation, error } =
+    await supabaseAdmin
+      .from("reservations")
+      .select("*")
+      .eq("id", id)
+      .single();
 
   if (error || !reservation) {
     notFound();
@@ -133,7 +152,7 @@ export default async function ReservationDetails({ params }) {
       </div>
 
       {/* =========================
-          MAIN INFORMATION
+          INFORMATION
       ========================= */}
 
       <div className={styles.grid}>
@@ -191,15 +210,6 @@ export default async function ReservationDetails({ params }) {
             </div>
 
             <div className={styles.detail}>
-              <span>Check-in Time</span>
-
-              <strong>
-                {reservation.check_in_time ||
-                  "2:00 PM"}
-              </strong>
-            </div>
-
-            <div className={styles.detail}>
               <span>Check-out</span>
 
               <strong>
@@ -210,74 +220,12 @@ export default async function ReservationDetails({ params }) {
             </div>
 
             <div className={styles.detail}>
-              <span>Check-out Time</span>
-
-              <strong>
-                {reservation.check_out_time ||
-                  "12:00 PM"}
-              </strong>
-            </div>
-
-            <div className={styles.detail}>
               <span>Number of Guests</span>
 
               <strong>
-                {reservation.guests || 0}
-              </strong>
-            </div>
-          </div>
-        </div>
-
-        {/* Package Information */}
-
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2>Package</h2>
-          </div>
-
-          <div className={styles.details}>
-            <div className={styles.detail}>
-              <span>Package Price</span>
-
-              <strong>
-                {formatCurrency(
-                  reservation.package_price
-                )}
-              </strong>
-            </div>
-
-            <div className={styles.detail}>
-              <span>Included Guests</span>
-
-              <strong>
-                {reservation.included_guests ||
+                {reservation.guests ||
+                  reservation.number_of_guests ||
                   0}
-              </strong>
-            </div>
-
-            <div className={styles.detail}>
-              <span>Extra Guests</span>
-
-              <strong>
-                {reservation.extra_guests || 0}
-              </strong>
-            </div>
-
-            <div className={styles.detail}>
-              <span>Extra Guest Fee</span>
-
-              <strong>
-                {formatCurrency(
-                  reservation.extra_guest_fee
-                )}
-              </strong>
-            </div>
-
-            <div className={styles.totalRow}>
-              <span>Total Amount</span>
-
-              <strong>
-                {formatCurrency(totalAmount)}
               </strong>
             </div>
           </div>
@@ -301,11 +249,11 @@ export default async function ReservationDetails({ params }) {
             </div>
 
             <div className={styles.detail}>
-              <span>Amount To Pay</span>
+              <span>Total Amount</span>
 
               <strong>
                 {formatCurrency(
-                  reservation.amount_to_pay
+                  totalAmount
                 )}
               </strong>
             </div>
@@ -314,7 +262,9 @@ export default async function ReservationDetails({ params }) {
               <span>Amount Paid</span>
 
               <strong className={styles.paid}>
-                {formatCurrency(amountPaid)}
+                {formatCurrency(
+                  amountPaid
+                )}
               </strong>
             </div>
 
@@ -425,9 +375,12 @@ export default async function ReservationDetails({ params }) {
           remainingBalance={remainingBalance}
         />
 
-        <button className={styles.orange}>
-          Check-out Guest
-        </button>
+        <CheckOutGuest
+          reservationId={reservation.id}
+          reservationStatus={
+            reservation.reservation_status
+          }
+        />
 
         <button className={styles.red}>
           Cancel Reservation

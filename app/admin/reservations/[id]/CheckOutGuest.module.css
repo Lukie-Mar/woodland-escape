@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.button {
+  border: none;
+  background: #d97706;
+  color: white;
+
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.button:hover {
+  background: #b45309;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkedOut {
+  border: none;
+  background: #e5e7eb;
+  color: #374151;
+
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: default;
+}
+
+.error {
+  margin: 7px 0 0;
+
+  color: #991b1b;
+
+  font-size: 12px;
+  max-width: 220px;
+}
