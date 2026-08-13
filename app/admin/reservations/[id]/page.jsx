@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
+import ConfirmCheckIn from "./ConfirmCheckIn";
 import RecordBalancePayment from "./RecordBalancePayment";
 import styles from "./ReservationDetails.module.css";
 
@@ -26,6 +27,8 @@ function formatDate(date) {
 function formatStatus(status) {
   if (status === "CONFIRMED") return "Confirmed";
   if (status === "PENDING_PAYMENT") return "Pending Payment";
+  if (status === "CHECKED_IN") return "Checked In";
+  if (status === "CHECKED_OUT") return "Checked Out";
   if (status === "CANCELLED") return "Cancelled";
 
   return status || "Unknown";
@@ -110,6 +113,12 @@ export default async function ReservationDetails({ params }) {
                 : reservation.reservation_status ===
                   "PENDING_PAYMENT"
                 ? styles.pending
+                : reservation.reservation_status ===
+                  "CHECKED_IN"
+                ? styles.confirmed
+                : reservation.reservation_status ===
+                  "CHECKED_OUT"
+                ? styles.defaultStatus
                 : reservation.reservation_status ===
                   "CANCELLED"
                 ? styles.cancelled
@@ -312,9 +321,7 @@ export default async function ReservationDetails({ params }) {
             <div className={styles.detail}>
               <span>Remaining Balance</span>
 
-              <strong
-                className={styles.balance}
-              >
+              <strong className={styles.balance}>
                 {formatCurrency(
                   remainingBalance
                 )}
@@ -406,9 +413,12 @@ export default async function ReservationDetails({ params }) {
       ========================= */}
 
       <div className={styles.actions}>
-        <button className={styles.green}>
-          Confirm Check-in
-        </button>
+        <ConfirmCheckIn
+          reservationId={reservation.id}
+          reservationStatus={
+            reservation.reservation_status
+          }
+        />
 
         <RecordBalancePayment
           reservationId={reservation.id}
