@@ -6,6 +6,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import ConfirmCheckIn from "./ConfirmCheckIn";
 import CheckOutGuest from "./CheckOutGuest";
 import RecordBalancePayment from "./RecordBalancePayment";
+import CancelReservation from "./CancelReservation";
 
 import styles from "./ReservationDetails.module.css";
 
@@ -27,27 +28,25 @@ function formatDate(date) {
 }
 
 function formatStatus(status) {
-  if (status === "CONFIRMED") {
-    return "Confirmed";
-  }
+  switch (status) {
+    case "CONFIRMED":
+      return "Confirmed";
 
-  if (status === "PENDING_PAYMENT") {
-    return "Pending Payment";
-  }
+    case "PENDING_PAYMENT":
+      return "Pending Payment";
 
-  if (status === "CHECKED_IN") {
-    return "Checked In";
-  }
+    case "CHECKED_IN":
+      return "Checked In";
 
-  if (status === "CHECKED_OUT") {
-    return "Checked Out";
-  }
+    case "CHECKED_OUT":
+      return "Checked Out";
 
-  if (status === "CANCELLED") {
-    return "Cancelled";
-  }
+    case "CANCELLED":
+      return "Cancelled";
 
-  return status || "Unknown";
+    default:
+      return status || "Unknown";
+  }
 }
 
 export default async function ReservationDetails({
@@ -382,9 +381,12 @@ export default async function ReservationDetails({
           }
         />
 
-        <button className={styles.red}>
-          Cancel Reservation
-        </button>
+        <CancelReservation
+          reservationId={reservation.id}
+          reservationStatus={
+            reservation.reservation_status
+          }
+        />
       </div>
     </div>
   );
