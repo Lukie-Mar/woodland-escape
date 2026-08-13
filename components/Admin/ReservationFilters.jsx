@@ -12,11 +12,14 @@ function formatCurrency(amount) {
 function formatDate(date) {
   if (!date) return "—";
 
-  return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return new Date(`${date}T00:00:00`).toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }
+  );
 }
 
 function getStatusClass(status) {
@@ -27,6 +30,12 @@ function getStatusClass(status) {
     case "PENDING_PAYMENT":
       return styles.pending;
 
+    case "CHECKED_IN":
+      return styles.checkedIn;
+
+    case "CHECKED_OUT":
+      return styles.checkedOut;
+
     case "CANCELLED":
       return styles.cancelled;
 
@@ -36,45 +45,76 @@ function getStatusClass(status) {
 }
 
 function formatStatus(status) {
-  if (status === "PENDING_PAYMENT") return "Pending Payment";
-  if (status === "CONFIRMED") return "Confirmed";
-  if (status === "CANCELLED") return "Cancelled";
+  switch (status) {
+    case "PENDING_PAYMENT":
+      return "Pending Payment";
 
-  return status || "Unknown";
+    case "CONFIRMED":
+      return "Confirmed";
+
+    case "CHECKED_IN":
+      return "Checked In";
+
+    case "CHECKED_OUT":
+      return "Checked Out";
+
+    case "CANCELLED":
+      return "Cancelled";
+
+    default:
+      return status || "Unknown";
+  }
 }
 
-export default function ReservationFilters({ reservations }) {
+export default function ReservationFilters({
+  reservations,
+}) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
-  const [paymentStatus, setPaymentStatus] = useState("ALL");
+  const [paymentStatus, setPaymentStatus] =
+    useState("ALL");
 
   const filteredReservations = useMemo(() => {
-    const searchValue = search.trim().toLowerCase();
+    const searchValue =
+      search.trim().toLowerCase();
 
-    return reservations.filter((reservation) => {
-      const matchesSearch =
-        !searchValue ||
-        reservation.reservation_code
-          ?.toLowerCase()
-          .includes(searchValue) ||
-        reservation.full_name
-          ?.toLowerCase()
-          .includes(searchValue) ||
-        reservation.email
-          ?.toLowerCase()
-          .includes(searchValue);
+    return reservations.filter(
+      (reservation) => {
+        const matchesSearch =
+          !searchValue ||
+          reservation.reservation_code
+            ?.toLowerCase()
+            .includes(searchValue) ||
+          reservation.full_name
+            ?.toLowerCase()
+            .includes(searchValue) ||
+          reservation.email
+            ?.toLowerCase()
+            .includes(searchValue);
 
-      const matchesStatus =
-        status === "ALL" ||
-        reservation.reservation_status === status;
+        const matchesStatus =
+          status === "ALL" ||
+          reservation.reservation_status ===
+            status;
 
-      const matchesPayment =
-        paymentStatus === "ALL" ||
-        reservation.payment_status === paymentStatus;
+        const matchesPayment =
+          paymentStatus === "ALL" ||
+          reservation.payment_status ===
+            paymentStatus;
 
-      return matchesSearch && matchesStatus && matchesPayment;
-    });
-  }, [reservations, search, status, paymentStatus]);
+        return (
+          matchesSearch &&
+          matchesStatus &&
+          matchesPayment
+        );
+      }
+    );
+  }, [
+    reservations,
+    search,
+    status,
+    paymentStatus,
+  ]);
 
   const clearFilters = () => {
     setSearch("");
@@ -92,35 +132,70 @@ export default function ReservationFilters({ reservations }) {
       {/* Filters */}
       <div className={styles.filters}>
         <div className={styles.searchBox}>
-          <span className={styles.searchIcon}>⌕</span>
+          <span className={styles.searchIcon}>
+            ⌕
+          </span>
 
           <input
             type="text"
             placeholder="Search reservation or guest..."
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) =>
+              setSearch(event.target.value)
+            }
           />
         </div>
 
         <select
           value={status}
-          onChange={(event) => setStatus(event.target.value)}
+          onChange={(event) =>
+            setStatus(event.target.value)
+          }
           className={styles.select}
         >
-          <option value="ALL">All Reservation Status</option>
-          <option value="CONFIRMED">Confirmed</option>
-          <option value="PENDING_PAYMENT">Pending Payment</option>
-          <option value="CANCELLED">Cancelled</option>
+          <option value="ALL">
+            All Reservation Status
+          </option>
+
+          <option value="CONFIRMED">
+            Confirmed
+          </option>
+
+          <option value="PENDING_PAYMENT">
+            Pending Payment
+          </option>
+
+          <option value="CHECKED_IN">
+            Checked In
+          </option>
+
+          <option value="CHECKED_OUT">
+            Checked Out
+          </option>
+
+          <option value="CANCELLED">
+            Cancelled
+          </option>
         </select>
 
         <select
           value={paymentStatus}
-          onChange={(event) => setPaymentStatus(event.target.value)}
+          onChange={(event) =>
+            setPaymentStatus(event.target.value)
+          }
           className={styles.select}
         >
-          <option value="ALL">All Payment Status</option>
-          <option value="PAID">Paid</option>
-          <option value="PENDING">Pending</option>
+          <option value="ALL">
+            All Payment Status
+          </option>
+
+          <option value="PAID">
+            Paid
+          </option>
+
+          <option value="PENDING">
+            Pending
+          </option>
         </select>
 
         {hasFilters && (
@@ -137,8 +212,15 @@ export default function ReservationFilters({ reservations }) {
       {/* Results */}
       <div className={styles.resultsHeader}>
         <span>
-          Showing <strong>{filteredReservations.length}</strong>{" "}
-          of <strong>{reservations.length}</strong> reservations
+          Showing{" "}
+          <strong>
+            {filteredReservations.length}
+          </strong>{" "}
+          of{" "}
+          <strong>
+            {reservations.length}
+          </strong>{" "}
+          reservations
         </span>
       </div>
 
@@ -147,8 +229,10 @@ export default function ReservationFilters({ reservations }) {
         {filteredReservations.length === 0 ? (
           <div className={styles.empty}>
             <h3>No reservations found</h3>
+
             <p>
-              Try changing your search or filter settings.
+              Try changing your search or filter
+              settings.
             </p>
           </div>
         ) : (
@@ -169,68 +253,106 @@ export default function ReservationFilters({ reservations }) {
             </thead>
 
             <tbody>
-              {filteredReservations.map((reservation) => (
-                <tr key={reservation.id}>
-                  <td>
-                    <strong className={styles.reservationCode}>
-                      {reservation.reservation_code}
-                    </strong>
-                  </td>
+              {filteredReservations.map(
+                (reservation) => (
+                  <tr key={reservation.id}>
+                    <td>
+                      <strong
+                        className={
+                          styles.reservationCode
+                        }
+                      >
+                        {
+                          reservation.reservation_code
+                        }
+                      </strong>
+                    </td>
 
-                  <td>
-                    <div className={styles.guest}>
-                      <strong>{reservation.full_name}</strong>
+                    <td>
+                      <div
+                        className={styles.guest}
+                      >
+                        <strong>
+                          {
+                            reservation.full_name
+                          }
+                        </strong>
 
-                      {reservation.email && (
-                        <span>{reservation.email}</span>
+                        {reservation.email && (
+                          <span>
+                            {reservation.email}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td>
+                      {formatDate(
+                        reservation.check_in
                       )}
-                    </div>
-                  </td>
+                    </td>
 
-                  <td>{formatDate(reservation.check_in)}</td>
+                    <td>
+                      {formatDate(
+                        reservation.check_out
+                      )}
+                    </td>
 
-                  <td>{formatDate(reservation.check_out)}</td>
+                    <td>
+                      {reservation.guests}
+                    </td>
 
-                  <td>{reservation.guests}</td>
-
-                  <td>
-                    {formatCurrency(reservation.total_amount)}
-                  </td>
-
-                  <td>
-                    {formatCurrency(reservation.amount_paid)}
-                  </td>
-
-                  <td>
-                    <span className={styles.balance}>
+                    <td>
                       {formatCurrency(
-                        reservation.remaining_balance
+                        reservation.total_amount
                       )}
-                    </span>
-                  </td>
+                    </td>
 
-                  <td>
-                    <span
-                      className={`${styles.status} ${getStatusClass(
-                        reservation.reservation_status
-                      )}`}
-                    >
-                      {formatStatus(
-                        reservation.reservation_status
+                    <td>
+                      {formatCurrency(
+                        reservation.amount_paid
                       )}
-                    </span>
-                  </td>
+                    </td>
 
-                  <td>
-                    <Link
-                      href={`/admin/reservations/${reservation.id}`}
-                      className={styles.viewButton}
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+                    <td>
+                      <span
+                        className={
+                          styles.balance
+                        }
+                      >
+                        {formatCurrency(
+                          reservation.remaining_balance
+                        )}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span
+                        className={`${styles.status} ${
+                          getStatusClass(
+                            reservation.reservation_status
+                          )
+                        }`}
+                      >
+                        {formatStatus(
+                          reservation.reservation_status
+                        )}
+                      </span>
+                    </td>
+
+                    <td>
+                      <Link
+                        href={`/admin/reservations/${reservation.id}`}
+                        className={
+                          styles.viewButton
+                        }
+                      >
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         )}

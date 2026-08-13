@@ -116,6 +116,25 @@
   background: #e5e7eb;
 }
 
+
+.checkedIn {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.checkedOut {
+  background: #e5e7eb;
+  color: #374151;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 /* =========================
    RESULTS
 ========================= */
