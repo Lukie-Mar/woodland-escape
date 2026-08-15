@@ -1,0 +1,776 @@
+.wrapper {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(320px, 0.75fr);
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+/* =========================
+   CALENDAR CARD
+========================= */
+
+.calendarCard {
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  border: 1px solid #e7ece8;
+
+  box-shadow:
+    0 10px 30px rgba(22, 48, 32, 0.07);
+}
+
+.calendarHeader {
+  padding: 26px 28px;
+
+  border-bottom: 1px solid #edf0ee;
+}
+
+.eyebrow {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #2f8f62;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+.calendarHeader h2 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 23px;
+
+  font-weight: 700;
+}
+
+.calendarHeader p {
+  margin: 7px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+/* =========================
+   CALENDAR
+========================= */
+
+.calendarContainer {
+  padding: 24px 28px 18px;
+}
+
+.calendarContainer :global(.react-calendar) {
+  width: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  font-family: inherit;
+}
+
+.calendarContainer
+  :global(.react-calendar__navigation) {
+  height: 52px;
+
+  margin-bottom: 16px;
+}
+
+.calendarContainer
+  :global(.react-calendar__navigation button) {
+  min-width: 44px;
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #163020;
+
+  font-size: 15px;
+
+  font-weight: 700;
+}
+
+.calendarContainer
+  :global(.react-calendar__navigation button:hover) {
+  background: #edf5ef;
+}
+
+.calendarContainer
+  :global(.react-calendar__navigation__label) {
+  background: #f5f8f6 !important;
+
+  color: #163020 !important;
+
+  font-size: 17px !important;
+}
+
+.calendarContainer
+  :global(.react-calendar__month-view__weekdays) {
+  margin-bottom: 6px;
+}
+
+.calendarContainer
+  :global(.react-calendar__month-view__weekdays__weekday) {
+  padding: 9px 0;
+
+  color: #8a938d;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.calendarContainer
+  :global(.react-calendar__month-view__weekdays__weekday abbr) {
+  text-decoration: none;
+}
+
+/* =========================
+   DATE TILES
+========================= */
+
+.calendarContainer
+  :global(.react-calendar__tile) {
+  position: relative;
+
+  min-height: 74px;
+
+  margin: 3px;
+
+  padding: 9px 5px 7px;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  color: #26332b;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.calendarContainer
+  :global(.react-calendar__tile:hover) {
+  transform: translateY(-1px);
+}
+
+.calendarContainer
+  :global(
+    .react-calendar__month-view__days__day--neighboringMonth
+  ) {
+  color: #b6bdb8;
+
+  opacity: 0.65;
+}
+
+/* =========================
+   TODAY
+========================= */
+
+.calendarContainer
+  :global(.react-calendar__tile--now) {
+  box-shadow:
+    inset 0 0 0 2px #2f8f62;
+
+  color: #163020;
+}
+
+/* =========================
+   SELECTED DATE
+========================= */
+
+.calendarContainer
+  :global(.react-calendar__tile--active) {
+  background: #163020 !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 5px 12px rgba(22, 48, 32, 0.22);
+}
+
+.calendarContainer
+  :global(.react-calendar__tile--active:hover) {
+  background: #21452f !important;
+}
+
+/* =========================
+   DATE STATUS BACKGROUNDS
+========================= */
+
+/* AVAILABLE */
+
+.availableTile {
+  background: #f4fbf6 !important;
+
+  box-shadow:
+    inset 0 0 0 1px #d7eadc;
+}
+
+.availableTile:hover {
+  background: #eaf7ee !important;
+}
+
+/* PENDING PAYMENT */
+
+.pendingTile {
+  background: #fff8e6 !important;
+
+  box-shadow:
+    inset 0 0 0 2px #f1d48b;
+}
+
+.pendingTile:hover {
+  background: #fff2cf !important;
+}
+
+/* BOOKED */
+
+.confirmedTile {
+  background: #eef5ff !important;
+
+  box-shadow:
+    inset 0 0 0 2px #8db8e8;
+}
+
+.confirmedTile:hover {
+  background: #e1eeff !important;
+}
+
+/* CHECKED IN */
+
+.checkedInTile {
+  background: #f1edff !important;
+
+  box-shadow:
+    inset 0 0 0 2px #b5a5e5;
+}
+
+.checkedInTile:hover {
+  background: #e9e2ff !important;
+}
+
+/* CHECKED OUT */
+
+.checkedOutTile {
+  background: #f1f2f3 !important;
+
+  box-shadow:
+    inset 0 0 0 1px #d1d5d9;
+}
+
+.checkedOutTile:hover {
+  background: #e8eaec !important;
+}
+
+/* =========================
+   STATUS LABELS
+========================= */
+
+.availableLabel,
+.dateLabel {
+  display: block;
+
+  margin-top: 7px;
+
+  padding: 4px;
+
+  border-radius: 5px;
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
+
+  line-height: 1.2;
+}
+
+/* AVAILABLE */
+
+.availableLabel {
+  background: #dff2e5;
+
+  color: #268052;
+}
+
+/* PENDING */
+
+.dateLabel.pending {
+  background: #ffe7a8;
+
+  color: #9a6500;
+}
+
+/* BOOKED */
+
+.dateLabel.confirmed {
+  background: #cfe2f8;
+
+  color: #155a9c;
+}
+
+/* CHECKED IN */
+
+.dateLabel.checkedIn {
+  background: #ddd3ff;
+
+  color: #6346a3;
+}
+
+/* CHECKED OUT */
+
+.dateLabel.checkedOut {
+  background: #dfe2e5;
+
+  color: #59616a;
+}
+
+/* =========================
+   LEGEND
+========================= */
+
+.legend {
+  padding: 20px 28px;
+
+  border-top: 1px solid #edf0ee;
+
+  background: #fbfcfb;
+}
+
+.legendTitle {
+  margin-bottom: 13px;
+
+  color: #163020;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.legendItems {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 14px 22px;
+}
+
+.legendItem {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #59645d;
+
+  font-size: 12px;
+}
+
+.legendDot {
+  width: 9px;
+
+  height: 9px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+}
+
+.green {
+  background: #2f8f62;
+}
+
+.yellow {
+  background: #d99a16;
+}
+
+.confirmedDot {
+  background: #3987d7;
+}
+
+.blue {
+  background: #7655c7;
+}
+
+.gray {
+  background: #7a8288;
+}
+
+/* =========================
+   DETAILS CARD
+========================= */
+
+.detailsCard {
+  min-height: 380px;
+
+  padding: 26px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7ece8;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 10px 30px rgba(22, 48, 32, 0.07);
+}
+
+.detailsTop {
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #edf0ee;
+}
+
+.detailsTop h2 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 23px;
+}
+
+/* =========================
+   RESERVATION STATUS
+========================= */
+
+.reservationStatus {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 24px;
+
+  padding: 14px 16px;
+
+  background: #f7f9f8;
+
+  border-radius: 12px;
+}
+
+.statusDot {
+  width: 11px;
+
+  height: 11px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+}
+
+.statusDot.pending {
+  background: #d99a16;
+}
+
+.statusDot.confirmed {
+  background: #3987d7;
+}
+
+.statusDot.checkedIn {
+  background: #7655c7;
+}
+
+.statusDot.checkedOut {
+  background: #7a8288;
+}
+
+.statusLabel {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #8a938d;
+
+  font-size: 11px;
+}
+
+.reservationStatus strong {
+  color: #163020;
+
+  font-size: 14px;
+}
+
+/* =========================
+   RESERVATION CODE
+========================= */
+
+.reservationCodeBox {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-top: 18px;
+
+  padding: 15px;
+
+  background: #edf7f0;
+
+  border-radius: 12px;
+}
+
+.reservationCodeBox span {
+  color: #5d7566;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.reservationCodeBox strong {
+  color: #163020;
+
+  font-size: 17px;
+}
+
+/* =========================
+   DETAILS GRID
+========================= */
+
+.detailsGrid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 18px;
+
+  margin-top: 22px;
+}
+
+.detailItem {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.detailItem span {
+  color: #929b95;
+
+  font-size: 11px;
+}
+
+.detailItem strong {
+  color: #26332b;
+
+  font-size: 13px;
+}
+
+/* =========================
+   VIEW BUTTON
+========================= */
+
+.viewButton {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 100%;
+
+  min-height: 44px;
+
+  margin-top: 24px;
+
+  background: #2f8f62;
+
+  color: #ffffff;
+
+  border-radius: 10px;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.viewButton:hover {
+  background: #267751;
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   AVAILABLE STATE
+========================= */
+
+.availableState {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 300px;
+
+  text-align: center;
+}
+
+.availableIcon {
+  width: 58px;
+
+  height: 58px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 15px;
+
+  background: #e3f5e8;
+
+  color: #2f8f62;
+
+  border-radius: 50%;
+
+  font-size: 27px;
+
+  font-weight: 800;
+}
+
+.availableBadge {
+  padding: 5px 10px;
+
+  background: #e3f5e8;
+
+  color: #2f8f62;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.06em;
+}
+
+.availableState h3 {
+  margin: 13px 0 0;
+
+  color: #163020;
+
+  font-size: 20px;
+}
+
+.availableState p {
+  max-width: 260px;
+
+  margin: 7px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .detailsCard {
+    min-height: auto;
+  }
+
+  .availableState {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 650px) {
+  .calendarHeader,
+  .calendarContainer {
+    padding-left: 18px;
+
+    padding-right: 18px;
+  }
+
+  .legend {
+    padding: 18px;
+  }
+
+  .calendarContainer
+    :global(.react-calendar__tile) {
+    min-height: 62px;
+
+    margin: 2px;
+
+    padding: 7px 3px;
+  }
+
+  .availableLabel,
+  .dateLabel {
+    font-size: 7px;
+
+    padding: 3px 2px;
+  }
+
+  .detailsCard {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 430px) {
+  .calendarContainer
+    :global(.react-calendar__tile) {
+    min-height: 55px;
+
+    font-size: 12px;
+  }
+
+  .availableLabel,
+  .dateLabel {
+    font-size: 6px;
+  }
+
+  .legendItems {
+    gap: 10px 15px;
+  }
+}
