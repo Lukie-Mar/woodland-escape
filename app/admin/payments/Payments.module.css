@@ -1,0 +1,347 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 28px;
+
+  width: 100%;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+}
+
+.header h1 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 36px;
+  font-weight: 700;
+
+  line-height: 1.15;
+}
+
+.header p {
+  margin: 9px 0 0;
+
+  color: #64748b;
+
+  font-size: 15px;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summaryGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 145px;
+
+  padding: 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7ece8;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 24px rgba(22, 48, 32, 0.06);
+}
+
+.summaryTitle {
+  color: #64748b;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.summaryCard strong {
+  margin-top: 12px;
+
+  color: #163020;
+
+  font-size: 30px;
+
+  font-weight: 750;
+}
+
+.summaryDescription {
+  margin-top: 7px;
+
+  color: #9aa39d;
+
+  font-size: 12px;
+}
+
+/* =========================
+   TABLE CARD
+========================= */
+
+.tableCard {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e7ece8;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 24px rgba(22, 48, 32, 0.06);
+}
+
+.tableHeader {
+  padding: 25px 28px;
+
+  border-bottom: 1px solid #edf0ee;
+}
+
+.tableHeader h2 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 21px;
+}
+
+.tableHeader p {
+  margin: 6px 0 0;
+
+  color: #7b857f;
+
+  font-size: 13px;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.tableWrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+
+  min-width: 850px;
+
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #f8faf9;
+}
+
+.table th {
+  padding: 16px 22px;
+
+  color: #65716a;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  text-align: left;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.04em;
+}
+
+.table td {
+  padding: 18px 22px;
+
+  border-top: 1px solid #edf0ee;
+
+  color: #4b5563;
+
+  font-size: 13px;
+}
+
+.table tbody tr {
+  transition:
+    background 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background: #f8fbf9;
+}
+
+/* =========================
+   PAYMENT IDENTIFIER
+========================= */
+
+.paymentId {
+  color: #6b7280;
+
+  font-size: 12px;
+
+  font-family: monospace;
+}
+
+.reservationCode {
+  color: #2f8f62;
+
+  font-size: 13px;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.paid {
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+.pending {
+  background: #fef3c7;
+
+  color: #92400e;
+}
+
+.failed {
+  background: #fee2e2;
+
+  color: #991b1b;
+}
+
+.refunded {
+  background: #e0e7ff;
+
+  color: #4338ca;
+}
+
+.defaultStatus {
+  background: #f1f5f9;
+
+  color: #475569;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 300px;
+
+  padding: 40px;
+
+  text-align: center;
+}
+
+.empty h3 {
+  margin: 0;
+
+  color: #163020;
+
+  font-size: 19px;
+}
+
+.empty p {
+  max-width: 400px;
+
+  margin: 8px 0 0;
+
+  color: #7b857f;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error {
+  padding: 30px;
+
+  background: #ffffff;
+
+  border: 1px solid #f1d0d0;
+
+  border-radius: 18px;
+}
+
+.error h2 {
+  margin: 0 0 8px;
+
+  color: #991b1b;
+
+  font-size: 20px;
+}
+
+.error p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 30px;
+  }
+
+  .summaryCard {
+    min-height: 125px;
+
+    padding: 20px;
+  }
+}
