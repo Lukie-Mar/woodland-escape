@@ -1,0 +1,255 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+}
+
+/* HEADER */
+
+.header h1 {
+  margin: 0;
+  color: #163020;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.header p {
+  margin: 9px 0 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+/* STATISTICS */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.statCard {
+  min-height: 150px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e7ece8;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(22, 48, 32, 0.06);
+}
+
+.statCard span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.statCard strong {
+  display: block;
+  margin-top: 12px;
+  color: #163020;
+  font-size: 29px;
+}
+
+.statCard small {
+  display: block;
+  margin-top: 7px;
+  color: #9aa39d;
+  font-size: 12px;
+}
+
+/* TWO COLUMN */
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+/* CARDS */
+
+.card {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e7ece8;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(22, 48, 32, 0.06);
+}
+
+.cardHeader {
+  padding: 24px 26px;
+  border-bottom: 1px solid #edf0ee;
+}
+
+.cardHeader h2 {
+  margin: 0;
+  color: #163020;
+  font-size: 20px;
+}
+
+.cardHeader p {
+  margin: 6px 0 0;
+  color: #7b857f;
+  font-size: 13px;
+}
+
+/* BREAKDOWN */
+
+.breakdown {
+  padding: 8px 26px 18px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 0;
+  border-bottom: 1px solid #edf0ee;
+  color: #55615a;
+  font-size: 14px;
+}
+
+.row strong {
+  color: #163020;
+}
+
+.totalRow {
+  border-bottom: none;
+  color: #163020;
+  font-weight: 700;
+}
+
+.totalRow strong {
+  color: #2f8f62;
+  font-size: 17px;
+}
+
+/* RESERVATION STATUS */
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: #edf0ee;
+}
+
+.statusGrid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 125px;
+  padding: 20px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.statusGrid strong {
+  color: #163020;
+  font-size: 28px;
+}
+
+.statusGrid span {
+  margin-top: 7px;
+  color: #737e77;
+  font-size: 12px;
+}
+
+/* MONTHLY TABLE */
+
+.monthTableWrapper {
+  overflow-x: auto;
+}
+
+.monthTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.monthTable thead {
+  background: #f8faf9;
+}
+
+.monthTable th {
+  padding: 15px 24px;
+  color: #65716a;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.monthTable td {
+  padding: 17px 24px;
+  border-top: 1px solid #edf0ee;
+  color: #55615a;
+  font-size: 14px;
+}
+
+.monthTable td strong {
+  color: #163020;
+}
+
+/* EMPTY */
+
+.empty {
+  padding: 50px;
+  color: #7b857f;
+  text-align: center;
+}
+
+/* ERROR */
+
+.error {
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #f1d0d0;
+  border-radius: 18px;
+}
+
+.error h2 {
+  margin: 0 0 8px;
+  color: #991b1b;
+  font-size: 20px;
+}
+
+.error p {
+  margin: 0;
+  color: #6b7280;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .statusGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .gridTwo {
+    grid-template-columns: 1fr;
+  }
+
+  .statusGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 30px;
+  }
+
+  .statusGrid {
+    grid-template-columns: 1fr;
+  }
+}
