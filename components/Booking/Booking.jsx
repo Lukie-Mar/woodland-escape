@@ -9,66 +9,74 @@ import ReservationForm from "./ReservationForm";
 import BookingSummary from "./BookingSummary";
 import BookingConfirmModal from "./BookingConfirmModal";
 
-const PACKAGE_PRICE = 15000;
-const INCLUDED_GUESTS = 18;
-const EXTRA_PERSON_RATE = 150;
-const DOWN_PAYMENT = 5000;
+import { calculateReservation } from "@/lib/calculator";
 
-// Temporary until we load from Supabase
+// Temporary until we load real booked dates
 const bookedDates = [
   "2026-08-15",
   "2026-08-22",
   "2026-09-05",
 ];
 
-export default function Booking() {
-  const [date, setDate] = useState(new Date());
+export default function Booking({ settings }) {
+  const includedGuests = Number(
+    settings?.included_guests ?? 18
+  );
 
-  const [guests, setGuests] = useState(INCLUDED_GUESTS);
+  const [date, setDate] = useState(
+    new Date()
+  );
 
-  const [loading, setLoading] = useState(false);
+  const [guests, setGuests] = useState(
+    includedGuests
+  );
 
-  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] =
+    useState(false);
 
-  const [bookingData, setBookingData] = useState({
-    fullName: "",
-    contact: "",
-    email: "",
-    specialRequest: "",
-    paymentOption: "DOWN_PAYMENT",
-  });
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const [bookingData, setBookingData] =
+    useState({
+      fullName: "",
+      contact: "",
+      email: "",
+      specialRequest: "",
+      paymentOption:
+        "DOWN_PAYMENT",
+    });
 
   function formatDate(date) {
-    return date.toISOString().split("T")[0];
+    return date
+      .toISOString()
+      .split("T")[0];
   }
 
   function isBooked(date) {
-    return bookedDates.includes(formatDate(date));
+    return bookedDates.includes(
+      formatDate(date)
+    );
   }
 
   // ------------------------
   // Pricing
   // ------------------------
 
-  const extraGuests = Math.max(
-    guests - INCLUDED_GUESTS,
-    0
-  );
+  const pricing =
+    calculateReservation(
+      settings,
+      guests,
+      bookingData.paymentOption
+    );
 
-  const extraCharge =
-    extraGuests * EXTRA_PERSON_RATE;
-
-  const total =
-    PACKAGE_PRICE + extraCharge;
-
-  const amountToPay =
-    bookingData.paymentOption ===
-    "FULL_PAYMENT"
-      ? total
-      : DOWN_PAYMENT;
-
-  const remainingBalance =
-    total - amountToPay;
+  const {
+    totalAmount,
+    amountToPay,
+    remainingBalance,
+    extraGuests,
+    extraFee,
+  } = pricing;
 
   // ------------------------
   // Check-out
@@ -87,14 +95,15 @@ export default function Booking() {
   const reservation = {
     ...bookingData,
 
-    checkInDate: date.toLocaleDateString(
-      "en-PH",
-      {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }
-    ),
+    checkInDate:
+      date.toLocaleDateString(
+        "en-PH",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }
+      ),
 
     checkOutDate:
       checkOutDate.toLocaleDateString(
@@ -108,11 +117,15 @@ export default function Booking() {
 
     guests,
 
-    total,
+    total: totalAmount,
 
     amountToPay,
 
     remainingBalance,
+
+    extraGuests,
+
+    extraFee,
   };
 
   // ------------------------
@@ -120,12 +133,18 @@ export default function Booking() {
   // ------------------------
 
   function handleReserve() {
-    if (!bookingData.fullName.trim()) {
-      alert("Please enter your full name.");
+    if (
+      !bookingData.fullName.trim()
+    ) {
+      alert(
+        "Please enter your full name."
+      );
       return;
     }
 
-    if (!bookingData.contact.trim()) {
+    if (
+      !bookingData.contact.trim()
+    ) {
       alert(
         "Please enter your contact number."
       );
@@ -166,7 +185,8 @@ export default function Booking() {
             specialRequest:
               bookingData.specialRequest,
 
-            checkIn: formatDate(date),
+            checkIn:
+              formatDate(date),
 
             guests,
 
@@ -228,32 +248,39 @@ export default function Booking() {
             />
 
             <ReservationForm
-              bookingData={bookingData}
+              bookingData={
+                bookingData
+              }
               setBookingData={
                 setBookingData
               }
               guests={guests}
               setGuests={setGuests}
               includedGuests={
-                INCLUDED_GUESTS
+                includedGuests
               }
-              extraPersonRate={
-                EXTRA_PERSON_RATE
-              }
+              extraPersonRate={Number(
+                settings?.extra_guest_fee ??
+                  150
+              )}
             />
 
             <BookingSummary
               date={date}
               guests={guests}
-              total={total}
-              amountToPay={amountToPay}
+              total={totalAmount}
+              amountToPay={
+                amountToPay
+              }
               remainingBalance={
                 remainingBalance
               }
               paymentOption={
                 bookingData.paymentOption
               }
-              onReserve={handleReserve}
+              onReserve={
+                handleReserve
+              }
               loading={loading}
             />
 
@@ -270,7 +297,9 @@ export default function Booking() {
         onConfirm={
           confirmReservation
         }
-        bookingData={reservation}
+        bookingData={
+          reservation
+        }
         loading={loading}
       />
     </>

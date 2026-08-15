@@ -1,9 +1,12 @@
 import Booking from "@/components/Booking/Booking";
+import { getPaymentSettings } from "@/lib/settings";
 
-export default function BookingPage() {
+export default async function BookingPage() {
+  const settings = await getPaymentSettings();
+
   return (
     <main>
-      <Booking />
+      <Booking settings={settings} />
     </main>
   );
 }
