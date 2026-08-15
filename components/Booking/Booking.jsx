@@ -23,59 +23,46 @@ export default function Booking({ settings }) {
     settings?.included_guests ?? 18
   );
 
-  const [date, setDate] = useState(
-    new Date()
-  );
+  const [date, setDate] = useState(new Date());
 
   const [guests, setGuests] = useState(
     includedGuests
   );
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [showModal, setShowModal] =
-    useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const [bookingData, setBookingData] =
-    useState({
-      fullName: "",
-      contact: "",
-      email: "",
-      specialRequest: "",
-      paymentOption:
-        "DOWN_PAYMENT",
-    });
+  const [bookingData, setBookingData] = useState({
+    fullName: "",
+    contact: "",
+    email: "",
+    specialRequest: "",
+    paymentOption: "DOWN_PAYMENT",
+  });
 
   function formatDate(date) {
-    return date
-      .toISOString()
-      .split("T")[0];
+    return date.toISOString().split("T")[0];
   }
 
   function isBooked(date) {
-    return bookedDates.includes(
-      formatDate(date)
-    );
+    return bookedDates.includes(formatDate(date));
   }
 
   // ------------------------
   // Pricing
   // ------------------------
 
-  const pricing =
-    calculateReservation(
-      settings,
-      guests,
-      bookingData.paymentOption
-    );
+  const pricing = calculateReservation(
+    settings,
+    guests,
+    bookingData.paymentOption
+  );
 
   const {
     totalAmount,
     amountToPay,
     remainingBalance,
-    extraGuests,
-    extraFee,
   } = pricing;
 
   // ------------------------
@@ -96,24 +83,18 @@ export default function Booking({ settings }) {
     ...bookingData,
 
     checkInDate:
-      date.toLocaleDateString(
-        "en-PH",
-        {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }
-      ),
+      date.toLocaleDateString("en-PH", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
 
     checkOutDate:
-      checkOutDate.toLocaleDateString(
-        "en-PH",
-        {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }
-      ),
+      checkOutDate.toLocaleDateString("en-PH", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
 
     guests,
 
@@ -123,9 +104,9 @@ export default function Booking({ settings }) {
 
     remainingBalance,
 
-    extraGuests,
+    extraGuests: pricing.extraGuests,
 
-    extraFee,
+    extraFee: pricing.extraFee,
   };
 
   // ------------------------
@@ -133,21 +114,13 @@ export default function Booking({ settings }) {
   // ------------------------
 
   function handleReserve() {
-    if (
-      !bookingData.fullName.trim()
-    ) {
-      alert(
-        "Please enter your full name."
-      );
+    if (!bookingData.fullName.trim()) {
+      alert("Please enter your full name.");
       return;
     }
 
-    if (
-      !bookingData.contact.trim()
-    ) {
-      alert(
-        "Please enter your contact number."
-      );
+    if (!bookingData.contact.trim()) {
+      alert("Please enter your contact number.");
       return;
     }
 
@@ -168,25 +141,20 @@ export default function Booking({ settings }) {
           method: "POST",
 
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
 
           body: JSON.stringify({
-            fullName:
-              bookingData.fullName,
+            fullName: bookingData.fullName,
 
-            contact:
-              bookingData.contact,
+            contact: bookingData.contact,
 
-            email:
-              bookingData.email,
+            email: bookingData.email,
 
             specialRequest:
               bookingData.specialRequest,
 
-            checkIn:
-              formatDate(date),
+            checkIn: formatDate(date),
 
             guests,
 
@@ -196,8 +164,7 @@ export default function Booking({ settings }) {
         }
       );
 
-      const result =
-        await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
         throw new Error(
@@ -248,39 +215,41 @@ export default function Booking({ settings }) {
             />
 
             <ReservationForm
-              bookingData={
-                bookingData
-              }
+              bookingData={bookingData}
               setBookingData={
                 setBookingData
               }
               guests={guests}
               setGuests={setGuests}
               includedGuests={
-                includedGuests
+                pricing.includedGuests
               }
-              extraPersonRate={Number(
-                settings?.extra_guest_fee ??
-                  150
-              )}
+              extraPersonRate={
+                pricing.extraGuestFee
+              }
             />
 
             <BookingSummary
               date={date}
               guests={guests}
               total={totalAmount}
-              amountToPay={
-                amountToPay
-              }
+              amountToPay={amountToPay}
               remainingBalance={
                 remainingBalance
               }
               paymentOption={
                 bookingData.paymentOption
               }
-              onReserve={
-                handleReserve
+              packagePrice={
+                pricing.packagePrice
               }
+              includedGuests={
+                pricing.includedGuests
+              }
+              extraPersonRate={
+                pricing.extraGuestFee
+              }
+              onReserve={handleReserve}
               loading={loading}
             />
 
@@ -297,9 +266,7 @@ export default function Booking({ settings }) {
         onConfirm={
           confirmReservation
         }
-        bookingData={
-          reservation
-        }
+        bookingData={reservation}
         loading={loading}
       />
     </>

@@ -1,6 +1,10 @@
 import Image from "next/image";
-import styles from "./Rooms.module.css";
 import Link from "next/link";
+
+import { getPaymentSettings } from "@/lib/settings";
+
+import styles from "./Rooms.module.css";
+
 const accommodations = [
   {
     title: "Deluxe Room",
@@ -22,7 +26,13 @@ const accommodations = [
   },
 ];
 
-export default function Rooms() {
+export default async function Rooms() {
+  const settings = await getPaymentSettings();
+
+  const packagePrice = Number(
+    settings?.package_price ?? 0
+  );
+
   return (
     <section className={styles.rooms}>
       <div className="container">
@@ -41,7 +51,6 @@ export default function Rooms() {
           amenities.
         </p>
 
-
         <div className={styles.packageCard}>
 
           <span className={styles.packageLabel}>
@@ -49,14 +58,13 @@ export default function Rooms() {
           </span>
 
           <h2>
-            ₱15,000
+            ₱{packagePrice.toLocaleString()}
           </h2>
 
           <p>
             A complete overnight resort experience perfect for family
             gatherings, celebrations, and group getaways.
           </p>
-
 
           <ul>
             <li>✔ Comfortable room accommodation</li>
@@ -67,20 +75,18 @@ export default function Rooms() {
             <li>✔ Nature relaxation experience</li>
           </ul>
 
-
           <Link
-  href="/booking"
-  className={styles.packageButton}
->
-  Reserve Your Stay
-</Link>
-        </div>
+            href="/booking"
+            className={styles.packageButton}
+          >
+            Reserve Your Stay
+          </Link>
 
+        </div>
 
         <h3 className={styles.includedTitle}>
           Available Room Options Included
         </h3>
-
 
         <div className={styles.grid}>
           {accommodations.map((room) => (

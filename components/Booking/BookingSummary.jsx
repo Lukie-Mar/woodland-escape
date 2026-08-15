@@ -11,21 +11,23 @@ export default function BookingSummary({
   paymentOption,
   onReserve,
   loading,
+  packagePrice,
+  includedGuests,
+  extraPersonRate,
 }) {
-  const PACKAGE_PRICE = 15000;
-  const INCLUDED_GUESTS = 18;
-  const EXTRA_PERSON_RATE = 150;
-
   const extraGuests = Math.max(
     0,
-    guests - INCLUDED_GUESTS
+    guests - includedGuests
   );
 
   const extraCharge =
-    extraGuests * EXTRA_PERSON_RATE;
+    extraGuests * extraPersonRate;
 
   const checkOutDate = new Date(date);
-  checkOutDate.setDate(checkOutDate.getDate() + 1);
+
+  checkOutDate.setDate(
+    checkOutDate.getDate() + 1
+  );
 
   return (
     <div className={styles.summaryCard}>
@@ -86,7 +88,7 @@ export default function BookingSummary({
           <span>Base Package</span>
 
           <strong>
-            ₱{PACKAGE_PRICE.toLocaleString()}
+            ₱{Number(packagePrice || 0).toLocaleString()}
           </strong>
         </div>
 
@@ -97,7 +99,7 @@ export default function BookingSummary({
             </span>
 
             <strong>
-              ₱{extraCharge.toLocaleString()}
+              ₱{Number(extraCharge || 0).toLocaleString()}
             </strong>
           </div>
         )}
@@ -124,7 +126,7 @@ export default function BookingSummary({
           <span>Pay Today</span>
 
           <strong>
-            ₱{amountToPay.toLocaleString()}
+            ₱{Number(amountToPay || 0).toLocaleString()}
           </strong>
         </div>
 
@@ -132,7 +134,7 @@ export default function BookingSummary({
           <span>Remaining Balance</span>
 
           <strong>
-            ₱{remainingBalance.toLocaleString()}
+            ₱{Number(remainingBalance || 0).toLocaleString()}
           </strong>
         </div>
       </div>
@@ -145,7 +147,7 @@ export default function BookingSummary({
         <span>Total Reservation</span>
 
         <h2>
-          ₱{total.toLocaleString()}
+          ₱{Number(total || 0).toLocaleString()}
         </h2>
       </div>
 
@@ -156,7 +158,9 @@ export default function BookingSummary({
       >
         {loading
           ? "Redirecting..."
-          : `Proceed to Pay ₱${amountToPay.toLocaleString()}`}
+          : `Proceed to Pay ₱${Number(
+              amountToPay || 0
+            ).toLocaleString()}`}
       </button>
     </div>
   );
