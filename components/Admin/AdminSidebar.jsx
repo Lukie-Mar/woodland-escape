@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -12,6 +12,8 @@ import {
   LogOut,
   Trees,
 } from "lucide-react";
+
+import { supabase } from "@/lib/supabaseClient";
 
 import styles from "./AdminSidebar.module.css";
 
@@ -50,16 +52,29 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
-  const handleLogout = () => {
-    // We'll connect this to Supabase Auth later.
-    console.log("Logout clicked");
-  };
+  async function handleLogout() {
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        throw error;
+      }
+
+      router.push("/admin/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("Unable to log out. Please try again.");
+    }
+  }
 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
         <Trees size={34} />
+
         <div>
           <h2>Woodland</h2>
           <span>Escape Admin</span>
@@ -75,7 +90,9 @@ export default function AdminSidebar() {
               key={item.title}
               href={item.href}
               className={`${styles.link} ${
-                pathname === item.href ? styles.active : ""
+                pathname === item.href
+                  ? styles.active
+                  : ""
               }`}
             >
               <Icon size={20} />
