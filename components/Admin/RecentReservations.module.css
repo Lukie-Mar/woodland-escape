@@ -1,69 +1,91 @@
 .card {
   background: #ffffff;
+  border: 1px solid rgba(22, 48, 32, 0.06);
   border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   margin-bottom: 30px;
 }
+
+/* Header */
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 24px 26px;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #edf0ee;
 }
 
 .header h2 {
   margin: 0;
   color: #163020;
-  font-size: 22px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 .header p {
   margin: 6px 0 0;
-  color: #888888;
+  color: #7b8580;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .viewAll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  border-radius: 8px;
   color: #2f855a;
+  background: #edf7f1;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .viewAll:hover {
-  text-decoration: underline;
+  background: #2f855a;
+  color: #ffffff;
 }
+
+/* Table */
 
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 900px;
+  border-collapse: collapse;
 }
 
 .table th {
   background: #f8faf9;
-  color: #555555;
-  font-size: 13px;
+  color: #64706a;
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.3px;
   text-align: left;
-  padding: 16px 20px;
+  padding: 14px 20px;
   white-space: nowrap;
+  border-bottom: 1px solid #edf0ee;
 }
 
 .table td {
-  padding: 17px 20px;
-  border-top: 1px solid #eeeeee;
+  padding: 16px 20px;
+  border-top: 1px solid #f0f2f1;
   color: #334155;
   font-size: 14px;
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 .table tbody tr {
@@ -71,12 +93,15 @@
 }
 
 .table tbody tr:hover {
-  background: #fafcfb;
+  background: #f8fbf9;
 }
 
 .table td strong {
   color: #163020;
+  font-weight: 700;
 }
+
+/* Payment */
 
 .payment {
   display: flex;
@@ -85,21 +110,29 @@
 }
 
 .payment strong {
+  color: #163020;
   font-size: 14px;
+  font-weight: 700;
 }
 
 .payment span {
-  color: #d97706;
+  color: #c26b08;
   font-size: 12px;
+  font-weight: 500;
 }
+
+/* Status */
 
 .status {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 90px;
   padding: 7px 12px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
+  line-height: 1;
 }
 
 .confirmed {
@@ -122,10 +155,13 @@
   color: #374151;
 }
 
+/* View Button */
+
 .viewButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 52px;
   padding: 7px 12px;
   border-radius: 8px;
   background: #edf7f1;
@@ -133,29 +169,67 @@
   text-decoration: none;
   font-size: 12px;
   font-weight: 700;
-  transition: 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .viewButton:hover {
   background: #2f855a;
-  color: white;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
+
+/* Empty */
 
 .empty {
   text-align: center;
-  padding: 40px !important;
-  color: #999999 !important;
+  padding: 44px 20px !important;
+  color: #9ca3af !important;
+  font-size: 14px !important;
 }
+
+/* Tablet */
 
 @media (max-width: 900px) {
   .header {
     align-items: flex-start;
     gap: 15px;
   }
+
+  .table {
+    min-width: 850px;
+  }
 }
 
+/* Mobile */
+
 @media (max-width: 600px) {
+  .card {
+    border-radius: 15px;
+  }
+
   .header {
     flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h2 {
+    font-size: 19px;
+  }
+
+  .header p {
+    font-size: 13px;
+  }
+
+  .viewAll {
+    width: 100%;
+  }
+
+  .table th,
+  .table td {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
