@@ -12,12 +12,14 @@ export default function DashboardCard({
     <div className={styles.card}>
       <div
         className={styles.icon}
-        style={{ backgroundColor: color }}
+        style={{
+          "--icon-color": color,
+        }}
       >
         <Icon size={28} />
       </div>
 
-      <div>
+      <div className={styles.content}>
         <p className={styles.title}>{title}</p>
         <h2 className={styles.value}>{value}</h2>
       </div>

@@ -7,48 +7,57 @@ import {
   CreditCard,
 } from "lucide-react";
 
+import DashboardCard from "./DashboardCard";
+
 import styles from "./DashboardCards.module.css";
 
 export default function DashboardCards({
-  reservations,
-  payments,
+  reservations = [],
+  payments = [],
 }) {
+  // -----------------------------
+  // Reservation Statistics
+  // -----------------------------
+
   const totalReservations =
     reservations.length;
 
   const confirmedReservations =
     reservations.filter(
-      (r) =>
-        r.reservation_status ===
+      (reservation) =>
+        reservation.reservation_status ===
         "CONFIRMED"
     ).length;
 
   const pendingReservations =
     reservations.filter(
-      (r) =>
-        r.reservation_status ===
+      (reservation) =>
+        reservation.reservation_status ===
         "PENDING_PAYMENT"
     ).length;
 
   const checkedInReservations =
     reservations.filter(
-      (r) =>
-        r.reservation_status ===
+      (reservation) =>
+        reservation.reservation_status ===
         "CHECKED_IN"
     ).length;
 
   const checkedOutReservations =
     reservations.filter(
-      (r) =>
-        r.reservation_status ===
+      (reservation) =>
+        reservation.reservation_status ===
         "CHECKED_OUT"
     ).length;
+
+  // -----------------------------
+  // Payment Statistics
+  // -----------------------------
 
   const totalRevenue =
     payments.reduce(
       (sum, payment) =>
-        sum +
-        Number(payment.amount || 0),
+        sum + Number(payment.amount || 0),
       0
     );
 
@@ -62,8 +71,7 @@ export default function DashboardCards({
           return (
             sum +
             Number(
-              reservation.remaining_balance ||
-                0
+              reservation.remaining_balance || 0
             )
           );
         }
@@ -73,33 +81,37 @@ export default function DashboardCards({
       0
     );
 
+  // -----------------------------
+  // Dashboard Cards
+  // -----------------------------
+
   const cards = [
     {
       title: "Reservations",
       value: totalReservations,
       icon: CalendarDays,
-      description: `${pendingReservations} pending payment`,
+      color: "#2f855a",
     },
 
     {
       title: "Confirmed",
       value: confirmedReservations,
       icon: CheckCircle,
-      description: "Confirmed bookings",
+      color: "#3182ce",
     },
 
     {
       title: "Checked In",
       value: checkedInReservations,
       icon: LogIn,
-      description: "Guests currently staying",
+      color: "#805ad5",
     },
 
     {
       title: "Checked Out",
       value: checkedOutReservations,
       icon: LogOut,
-      description: "Completed stays",
+      color: "#718096",
     },
 
     {
@@ -108,7 +120,7 @@ export default function DashboardCards({
         "en-PH"
       )}`,
       icon: Wallet,
-      description: "Total payments received",
+      color: "#d69e2e",
     },
 
     {
@@ -117,36 +129,21 @@ export default function DashboardCards({
         "en-PH"
       )}`,
       icon: CreditCard,
-      description: "Outstanding balance",
+      color: "#dd6b20",
     },
   ];
 
   return (
     <div className={styles.grid}>
-      {cards.map((card) => {
-        const Icon = card.icon;
-
-        return (
-          <div
-            key={card.title}
-            className={styles.card}
-          >
-            <div className={styles.icon}>
-              <Icon size={28} />
-            </div>
-
-            <div>
-              <h3>{card.title}</h3>
-
-              <h2>{card.value}</h2>
-
-              <p>
-                {card.description}
-              </p>
-            </div>
-          </div>
-        );
-      })}
+      {cards.map((card) => (
+        <DashboardCard
+          key={card.title}
+          title={card.title}
+          value={card.value}
+          icon={card.icon}
+          color={card.color}
+        />
+      ))}
     </div>
   );
 }
