@@ -4,11 +4,17 @@ import { useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import Link from "next/link";
 
+import {
+  blockAvailabilityDate,
+  makeAvailabilityDateAvailable,
+} from "./availabilityActions";
+
 import "react-calendar/dist/Calendar.css";
 import styles from "./AvailabilityCalendar.module.css";
 
 function formatDate(date) {
   const year = date.getFullYear();
+
   const month = String(
     date.getMonth() + 1
   ).padStart(2, "0");
@@ -28,9 +34,23 @@ function getReservationForDate(
 
   return reservations.find(
     (reservation) =>
-      reservation.check_in === dateString &&
+      reservation.check_in ===
+        dateString &&
       reservation.reservation_status !==
         "CANCELLED"
+  );
+}
+
+function getOverrideForDate(
+  date,
+  overrides
+) {
+  const dateString = formatDate(date);
+
+  return overrides.find(
+    (override) =>
+      override.date === dateString &&
+      override.status === "UNAVAILABLE"
   );
 }
 
@@ -91,11 +111,53 @@ function getShortStatus(status) {
   }
 }
 
+function getOverrideLabel(reason) {
+  switch (reason) {
+    case "EXISTING_BOOKING":
+      return "EXISTING";
+
+    case "PRIVATE_EVENT":
+      return "EVENT";
+
+    case "MAINTENANCE":
+      return "MAINT.";
+
+    default:
+      return "BLOCKED";
+  }
+}
+
+function getOverrideReasonLabel(reason) {
+  switch (reason) {
+    case "EXISTING_BOOKING":
+      return "Existing Booking";
+
+    case "PRIVATE_EVENT":
+      return "Private Event";
+
+    case "MAINTENANCE":
+      return "Maintenance";
+
+    default:
+      return "Unavailable";
+  }
+}
+
 export default function AvailabilityCalendar({
   reservations,
+  overrides,
 }) {
   const [selectedDate, setSelectedDate] =
     useState(new Date());
+
+  const [selectedReason, setSelectedReason] =
+    useState("EXISTING_BOOKING");
+
+  const [isSaving, setIsSaving] =
+    useState(false);
+
+  const [message, setMessage] =
+    useState("");
 
   const selectedReservation = useMemo(
     () =>
@@ -106,12 +168,89 @@ export default function AvailabilityCalendar({
     [selectedDate, reservations]
   );
 
+  const selectedOverride = useMemo(
+    () =>
+      getOverrideForDate(
+        selectedDate,
+        overrides
+      ),
+    [selectedDate, overrides]
+  );
+
+  const selectedDateString =
+    formatDate(selectedDate);
+
+  async function handleBlockDate() {
+    try {
+      setIsSaving(true);
+      setMessage("");
+
+      await blockAvailabilityDate(
+        selectedDateString,
+        selectedReason
+      );
+
+      setMessage(
+        `${getOverrideReasonLabel(
+          selectedReason
+        )} saved for this date.`
+      );
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+
+      setMessage(
+        error?.message ||
+          "Unable to update availability."
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function handleMakeAvailable() {
+    try {
+      setIsSaving(true);
+      setMessage("");
+
+      await makeAvailabilityDateAvailable(
+        selectedDateString
+      );
+
+      setMessage(
+        "Date is now available."
+      );
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+
+      setMessage(
+        error?.message ||
+          "Unable to update availability."
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   const tileClassName = ({
     date,
     view,
   }) => {
     if (view !== "month") {
       return null;
+    }
+
+    const override =
+      getOverrideForDate(
+        date,
+        overrides
+      );
+
+    if (override) {
+      return styles.unavailableTile;
     }
 
     const reservation =
@@ -152,6 +291,26 @@ export default function AvailabilityCalendar({
       return null;
     }
 
+    const override =
+      getOverrideForDate(
+        date,
+        overrides
+      );
+
+    if (override) {
+      return (
+        <span
+          className={
+            styles.unavailableLabel
+          }
+        >
+          {getOverrideLabel(
+            override.reason
+          )}
+        </span>
+      );
+    }
+
     const reservation =
       getReservationForDate(
         date,
@@ -160,7 +319,11 @@ export default function AvailabilityCalendar({
 
     if (!reservation) {
       return (
-        <span className={styles.availableLabel}>
+        <span
+          className={
+            styles.availableLabel
+          }
+        >
           AVAILABLE
         </span>
       );
@@ -183,17 +346,20 @@ export default function AvailabilityCalendar({
 
   return (
     <div className={styles.wrapper}>
-
       {/* =========================
           CALENDAR
       ========================= */}
 
       <div className={styles.calendarCard}>
-
-        <div className={styles.calendarHeader}>
-
+        <div
+          className={
+            styles.calendarHeader
+          }
+        >
           <div>
-            <span className={styles.eyebrow}>
+            <span
+              className={styles.eyebrow}
+            >
               RESORT CALENDAR
             </span>
 
@@ -202,15 +368,17 @@ export default function AvailabilityCalendar({
             </h2>
 
             <p>
-              Check which dates are available
-              before accepting a reservation.
+              Check and manage which dates
+              are available for reservations.
             </p>
           </div>
-
         </div>
 
-        <div className={styles.calendarContainer}>
-
+        <div
+          className={
+            styles.calendarContainer
+          }
+        >
           <Calendar
             value={selectedDate}
             onChange={setSelectedDate}
@@ -221,7 +389,6 @@ export default function AvailabilityCalendar({
             next2Label={null}
             showNeighboringMonth={true}
           />
-
         </div>
 
         {/* =========================
@@ -229,14 +396,24 @@ export default function AvailabilityCalendar({
         ========================= */}
 
         <div className={styles.legend}>
-
-          <div className={styles.legendTitle}>
+          <div
+            className={
+              styles.legendTitle
+            }
+          >
             Date Status
           </div>
 
-          <div className={styles.legendItems}>
-
-            <div className={styles.legendItem}>
+          <div
+            className={
+              styles.legendItems
+            }
+          >
+            <div
+              className={
+                styles.legendItem
+              }
+            >
               <span
                 className={`${styles.legendDot} ${styles.green}`}
               />
@@ -244,7 +421,11 @@ export default function AvailabilityCalendar({
               <span>Available</span>
             </div>
 
-            <div className={styles.legendItem}>
+            <div
+              className={
+                styles.legendItem
+              }
+            >
               <span
                 className={`${styles.legendDot} ${styles.yellow}`}
               />
@@ -254,7 +435,11 @@ export default function AvailabilityCalendar({
               </span>
             </div>
 
-            <div className={styles.legendItem}>
+            <div
+              className={
+                styles.legendItem
+              }
+            >
               <span
                 className={`${styles.legendDot} ${styles.confirmedDot}`}
               />
@@ -262,7 +447,11 @@ export default function AvailabilityCalendar({
               <span>Booked</span>
             </div>
 
-            <div className={styles.legendItem}>
+            <div
+              className={
+                styles.legendItem
+              }
+            >
               <span
                 className={`${styles.legendDot} ${styles.blue}`}
               />
@@ -270,7 +459,11 @@ export default function AvailabilityCalendar({
               <span>Checked In</span>
             </div>
 
-            <div className={styles.legendItem}>
+            <div
+              className={
+                styles.legendItem
+              }
+            >
               <span
                 className={`${styles.legendDot} ${styles.gray}`}
               />
@@ -278,10 +471,19 @@ export default function AvailabilityCalendar({
               <span>Checked Out</span>
             </div>
 
+            <div
+              className={
+                styles.legendItem
+              }
+            >
+              <span
+                className={`${styles.legendDot} ${styles.red}`}
+              />
+
+              <span>Unavailable</span>
+            </div>
           </div>
-
         </div>
-
       </div>
 
       {/* =========================
@@ -289,10 +491,10 @@ export default function AvailabilityCalendar({
       ========================= */}
 
       <div className={styles.detailsCard}>
-
         <div className={styles.detailsTop}>
-
-          <span className={styles.eyebrow}>
+          <span
+            className={styles.eyebrow}
+          >
             SELECTED DATE
           </span>
 
@@ -306,18 +508,19 @@ export default function AvailabilityCalendar({
               }
             )}
           </h2>
-
         </div>
+
+        {/* =========================
+            WEBSITE RESERVATION
+        ========================= */}
 
         {selectedReservation ? (
           <>
-
             <div
               className={
                 styles.reservationStatus
               }
             >
-
               <span
                 className={`${styles.statusDot} ${
                   getStatusClass(
@@ -327,9 +530,10 @@ export default function AvailabilityCalendar({
               />
 
               <div>
-
                 <span
-                  className={styles.statusLabel}
+                  className={
+                    styles.statusLabel
+                  }
                 >
                   Reservation Status
                 </span>
@@ -339,9 +543,7 @@ export default function AvailabilityCalendar({
                     selectedReservation.reservation_status
                   )}
                 </strong>
-
               </div>
-
             </div>
 
             <div
@@ -349,7 +551,6 @@ export default function AvailabilityCalendar({
                 styles.reservationCodeBox
               }
             >
-
               <span>
                 RESERVATION
               </span>
@@ -359,15 +560,17 @@ export default function AvailabilityCalendar({
                   selectedReservation.reservation_code
                 }
               </strong>
-
             </div>
 
             <div
-              className={styles.detailsGrid}
+              className={
+                styles.detailsGrid
+              }
             >
-
               <div
-                className={styles.detailItem}
+                className={
+                  styles.detailItem
+                }
               >
                 <span>Guest</span>
 
@@ -379,7 +582,9 @@ export default function AvailabilityCalendar({
               </div>
 
               <div
-                className={styles.detailItem}
+                className={
+                  styles.detailItem
+                }
               >
                 <span>Guests</span>
 
@@ -392,7 +597,9 @@ export default function AvailabilityCalendar({
               </div>
 
               <div
-                className={styles.detailItem}
+                className={
+                  styles.detailItem
+                }
               >
                 <span>Check-in</span>
 
@@ -404,7 +611,9 @@ export default function AvailabilityCalendar({
               </div>
 
               <div
-                className={styles.detailItem}
+                className={
+                  styles.detailItem
+                }
               >
                 <span>Check-out</span>
 
@@ -414,7 +623,6 @@ export default function AvailabilityCalendar({
                   }
                 </strong>
               </div>
-
             </div>
 
             <Link
@@ -423,22 +631,83 @@ export default function AvailabilityCalendar({
             >
               View Reservation
             </Link>
-
           </>
-        ) : (
+        ) : selectedOverride ? (
+          /* =========================
+             MANUAL BLOCK
+          ========================= */
 
           <div
-            className={styles.availableState}
+            className={
+              styles.unavailableState
+            }
           >
-
             <div
-              className={styles.availableIcon}
+              className={
+                styles.unavailableIcon
+              }
+            >
+              !
+            </div>
+
+            <span
+              className={
+                styles.unavailableBadge
+              }
+            >
+              UNAVAILABLE
+            </span>
+
+            <h3>
+              {
+                getOverrideReasonLabel(
+                  selectedOverride.reason
+                )
+              }
+            </h3>
+
+            <p>
+              This date has been manually
+              blocked by the administrator.
+            </p>
+
+            <button
+              type="button"
+              className={
+                styles.availableButton
+              }
+              onClick={
+                handleMakeAvailable
+              }
+              disabled={isSaving}
+            >
+              {isSaving
+                ? "Updating..."
+                : "Make Available"}
+            </button>
+          </div>
+        ) : (
+          /* =========================
+             AVAILABLE
+          ========================= */
+
+          <div
+            className={
+              styles.availableState
+            }
+          >
+            <div
+              className={
+                styles.availableIcon
+              }
             >
               ✓
             </div>
 
             <span
-              className={styles.availableBadge}
+              className={
+                styles.availableBadge
+              }
             >
               AVAILABLE
             </span>
@@ -448,16 +717,104 @@ export default function AvailabilityCalendar({
             </h3>
 
             <p>
-              No active reservation is
-              scheduled for this date.
+              No active reservation or
+              manual block is scheduled for
+              this date.
             </p>
-
           </div>
-
         )}
 
-      </div>
+        {/* =========================
+            AVAILABILITY CONTROL
+        ========================= */}
 
+        {!selectedReservation &&
+          !selectedOverride && (
+            <div
+              className={
+                styles.availabilityControl
+              }
+            >
+              <div
+                className={
+                  styles.controlHeader
+                }
+              >
+                <span
+                  className={
+                    styles.statusLabel
+                  }
+                >
+                  MANAGE AVAILABILITY
+                </span>
+
+                <strong>
+                  Block this date
+                </strong>
+              </div>
+
+              <p>
+                Use this when the resort is
+                unavailable for a booking made
+                outside the website.
+              </p>
+
+              <label
+                htmlFor="availabilityReason"
+              >
+                Reason
+              </label>
+
+              <select
+                id="availabilityReason"
+                value={selectedReason}
+                onChange={(event) =>
+                  setSelectedReason(
+                    event.target.value
+                  )
+                }
+                disabled={isSaving}
+              >
+                <option value="EXISTING_BOOKING">
+                  Existing Booking
+                </option>
+
+                <option value="PRIVATE_EVENT">
+                  Private Event
+                </option>
+
+                <option value="MAINTENANCE">
+                  Maintenance
+                </option>
+              </select>
+
+              <button
+                type="button"
+                className={
+                  styles.blockButton
+                }
+                onClick={
+                  handleBlockDate
+                }
+                disabled={isSaving}
+              >
+                {isSaving
+                  ? "Saving..."
+                  : "Mark as Unavailable"}
+              </button>
+            </div>
+          )}
+
+        {message && (
+          <div
+            className={
+              styles.actionMessage
+            }
+          >
+            {message}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,85 +1,117 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import AvailabilityCalendar from "./AvailabilityCalendar";
-
 import styles from "./Availability.module.css";
 
 export default async function AvailabilityPage() {
-  const { data: reservations = [], error } =
-    await supabaseAdmin
+  const [
+    reservationsResult,
+    overridesResult,
+  ] = await Promise.all([
+    supabaseAdmin
       .from("reservations")
       .select("*")
-      .order("check_in", { ascending: true });
+      .order("check_in", {
+        ascending: true,
+      }),
 
-  if (error) {
+    supabaseAdmin
+      .from("availability_overrides")
+      .select("*")
+      .order("date", {
+        ascending: true,
+      }),
+  ]);
+
+  const {
+    data: reservations = [],
+    error: reservationsError,
+  } = reservationsResult;
+
+  const {
+    data: overrides = [],
+    error: overridesError,
+  } = overridesResult;
+
+  if (reservationsError || overridesError) {
     return (
       <div className={styles.container}>
         <div className={styles.error}>
-          <h2>Unable to load availability</h2>
-          <p>{error.message}</p>
+          <h2>
+            Unable to load availability
+          </h2>
+
+          <p>
+            {reservationsError?.message ||
+              overridesError?.message ||
+              "Unable to load availability data."}
+          </p>
         </div>
       </div>
     );
   }
 
-  /*
-   * Active reservations are reservations that
-   * currently occupy or hold a resort date.
-   *
-   * Cancelled and checked-out reservations
-   * are not counted as active.
-   */
-  const activeReservations = reservations.filter(
-    (reservation) =>
-      [
-        "PENDING_PAYMENT",
-        "CONFIRMED",
-        "CHECKED_IN",
-      ].includes(reservation.reservation_status)
-  );
+  const activeReservations =
+    reservations.filter(
+      (reservation) =>
+        [
+          "PENDING_PAYMENT",
+          "CONFIRMED",
+          "CHECKED_IN",
+        ].includes(
+          reservation.reservation_status
+        )
+    );
+
+  const unavailableOverrides =
+    overrides.filter(
+      (override) =>
+        override.status === "UNAVAILABLE"
+    );
 
   return (
     <div className={styles.container}>
-
-      {/* =========================
-          PAGE HEADER
-      ========================= */}
-
       <div className={styles.header}>
-
         <div className={styles.headerContent}>
-
           <h1>Availability</h1>
 
           <p>
-            View booked dates and resort availability
+            View and manage resort availability.
           </p>
 
-          {/* Active Reservations */}
-
           <div className={styles.summaryCard}>
-
-            <div className={styles.summaryNumber}>
+            <div
+              className={styles.summaryNumber}
+            >
               {activeReservations.length}
             </div>
 
-            <div className={styles.summaryLabel}>
+            <div
+              className={styles.summaryLabel}
+            >
               Active Reservations
             </div>
-
           </div>
 
+          <div className={styles.summaryCard}>
+            <div
+              className={styles.summaryNumber}
+            >
+              {unavailableOverrides.length}
+            </div>
+
+            <div
+              className={styles.summaryLabel}
+            >
+              Manual Blocks
+            </div>
+          </div>
         </div>
-
       </div>
-
-      {/* =========================
-          AVAILABILITY CALENDAR
-      ========================= */}
 
       <AvailabilityCalendar
         reservations={reservations}
+        overrides={overrides}
       />
-
     </div>
   );
 }
