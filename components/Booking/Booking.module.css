@@ -410,3 +410,27 @@
 .radioOption span {
   line-height: 1.5;
 }
+
+.unavailable {
+  background: #f3d4d4 !important;
+  color: #8b2e2e !important;
+  cursor: not-allowed !important;
+}
+
+.unavailableLabel {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #8b2e2e;
+  line-height: 1.1;
+}
+
+.unavailableDot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #b94a48;
+  margin-right: 6px;
+}
